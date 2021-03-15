@@ -7,7 +7,7 @@ In this repo, we provide trained models and a step-by-step instruction to train,
 We are going to submit a paper to the workshop associated with this challenge. Please consider cite this paper if you find this repo useful.
 
 ## News
-------
+
 Our team (smilelab2021) ranked 1st in this challenge and here's the leaderboard link: 
 
 1. [RGB](https://competitions.codalab.org/competitions/27901#results)
@@ -17,7 +17,7 @@ Our team (smilelab2021) ranked 1st in this challenge and here's the leaderboard 
 
 
 ## Prepare and Process Data
-------
+
 There are six modalities in total: skeleton, skeleton features, rgb frames, flow color, hha and flow depth. 
 
 We provide preprocessed test data of all modalities to reproduce our submitted results.
@@ -41,7 +41,6 @@ We provide preprocessed test data of all modalities to reproduce our submitted r
 
 
 ## Requirments and Docker Images
-------
 
 The code is written using Anaconda Python >= 3.6 and Pytorch 1.7 with OpenCV.
 
@@ -52,7 +51,6 @@ For convenience, we provide a Nvidia docker image to run our code.
 [Docker Image](https://drive.google.com/file/d/1xDRhWW8mnZFXZw0c7pQZkDktHCmM9vL2/view?usp=sharing)
 
 ## Pretrained models and reproducing submitted results
-------
 We provide pretrained models for all modalities to reproduce our submitted results. Please download them at and put them into corresponding folders.
 
 [Download Pretrained Models](https://drive.google.com/drive/folders/1VcbTfnRa95XYxRB6JPdTiHvIzipqQeW3?usp=sharing)
@@ -60,7 +58,6 @@ We provide pretrained models for all modalities to reproduce our submitted resul
 To test our pretrained model, please put them under each code folders and run the test code as instructed below. To ensemble the tested results and reproduce our final submission. Please copy all the results .pkl files to ensemble/ and follow the instruction to ensemble our final outputs.
 
 ## Skeleton 
-------
 Skeleton modality can be trained, finetuned and tested using the code in GCN/ folder. Please follow the GCN/readme.md instruction to prepare skeleton data into four streams (joint, bone, joint_motion, bone motion).
 
 Basic usage:
@@ -70,11 +67,9 @@ Basic usage:
 To train, finetune and test our models, please change the config path to corresponding config files. Detailed instruction can be found in GCN/readme.md
 
 ## Skeleton Feature (TPose)
-------
 Follow the instruction in TPose/ to prepare the data, train and test the model.
 
 ## RGB Frames 
-------
 The RGB frames modality can be trained, finetuned and tested using the following commands in Conv3D/ folder.  
 
     python Sign_Isolated_Conv3D_clip.py
@@ -86,7 +81,6 @@ The RGB frames modality can be trained, finetuned and tested using the following
 Detailed instruction can be found in Conv3D/readme.md
 
 ## Flow Color 
-------
 The Flow Color modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_flow_clip.py
@@ -98,7 +92,6 @@ The Flow Color modality can be trained, finetuned and tested using the following
 Detailed instruction can be found in Conv3D/readme.md
 
 ## HHA
-------
 The HHA modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_hha_clip_mask.py
@@ -110,7 +103,6 @@ The HHA modality can be trained, finetuned and tested using the following comman
 Detailed instruction can be found in Conv3D/readme.md
 
 ## Flow Depth 
-------
 The Flow Depth modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_depth_flow_clip.py
@@ -122,7 +114,6 @@ The Flow Depth modality can be trained, finetuned and tested using the following
 Detailed instruction can be found in Conv3D/readme.md
 
 ## Model Ensemble
-------
 For both RGB and RGBD track, the tested results of all modalities need to be ensemble together to generate the final results. 
 
 1. For RGB track, we use the results from skeleton, skeleton feature, rgb, and flow color modalities to ensemble the final results. 
@@ -150,7 +141,6 @@ For both RGB and RGBD track, the tested results of all modalities need to be ens
 To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble and obtain our final submitted predictions. Detailed instruction can be find in ensemble/readme.md
 
 ## Reference
-------
 
 https://github.com/Sun1992/T-Pose-model-for-SLR
 
@@ -163,9 +153,7 @@ https://github.com/0aqz0/SLR
 https://github.com/kchengiva/DecoupleGCN-DropGraph
 
 ## License
-------
 This project is released under the Apache 2.0 license.
 
 ## Citation
-------
 If you find this project useful in your research, please consider cite:

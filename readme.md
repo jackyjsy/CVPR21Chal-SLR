@@ -4,7 +4,7 @@ Isolated Sign Language Recognition with Multi-modal Models
 This repo contains the code to reproduce our results on [2021 Looking at People Large Scale Signer Independent Isolated SLR CVPR Challenge](http://chalearnlap.cvc.uab.es/challenge/43/description/).
 
 In this repo, we provide trained models and a step-by-step instruction to train, test our models and reproduce our final results. We also provide a docker file to quick deployment of environment setup. 
-We are going to submit a paper to the workshop associated with this challenge. Please consider cite this paper if you find this repo useful.
+We are going to submit a paper to the workshop associated with this challenge to provide more details about our work. Please consider cite that paper if you find this repo useful in your research.
 
 ## News
 

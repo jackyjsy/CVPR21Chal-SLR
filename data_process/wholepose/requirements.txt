@@ -1,0 +1,5 @@
+pytorch
+torchvision
+opencv
+yacs
+natsort

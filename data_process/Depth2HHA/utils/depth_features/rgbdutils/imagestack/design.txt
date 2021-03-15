@@ -1,0 +1,40 @@
+
+Usage Scenario:
+
+ImageStack is intended to be used as a command line image manipulation program from within a shell such as bash. 
+
+ImageStack can also be compiled and used as a library. It's preferable to do this for experimental code (as opposed to modifying 
+imagestack itself).
+
+
+Current Design Goals:
+
+- Provide an extensive set of tools for manipulating arbitrarily sized 2D images in arbitrary color spaces with float precision.
+
+- Be able to manipulate 3D volumes of data without obfuscating or compromising support for the above.
+
+- Be able to manipulate 4D light fields without obfuscating or compromising support for either of the above.
+
+- Be able to manipulate 1D sounds without obfuscating or compomising support for any of the above.
+
+- Be as modular as possible with respect to operations. All code concerning an operation should be in the one place. It should be easy to add and remove operations.
+
+- Provide documentation for every operation.
+
+- Can be developed and used on any system that supports gcc/makefiles. 
+
+- Be as simple as possible.
+
+- Use only dependencies that are:
+  - Cross platform
+  - Easy to compile
+  - Widely available
+
+
+
+Future Design Goals:
+
+- Provide a clean API to the library from Python.
+
+- Be compilable in IDEs such as msvc or xcode.
+

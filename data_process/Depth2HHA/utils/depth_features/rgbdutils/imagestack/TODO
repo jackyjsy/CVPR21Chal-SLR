@@ -1,0 +1,22 @@
+Incorporate:
+  Anat's sparse deconvolution implementation from Ben Olson.
+  Katarina's Exposure Fusion implementation.
+  Some filters from Justin (channel smoothing, fast median?).
+
+it's not clear which operators consume their arguments and which don't
+
+change all help operators to use pprintf
+
+make some testing scripts
+
+make a distribution script (make a web page?)
+
+write some better examples
+
+write a README for developers 
+
+write a README for users
+
+fix equalize (and therefore histogram match) 
+
+Lightfield sampling goes from 0, 0 to width-1, height-1, whereas image sampling goes from 0.5 0.5 to width-0.5 height-0.5. Make this consistent

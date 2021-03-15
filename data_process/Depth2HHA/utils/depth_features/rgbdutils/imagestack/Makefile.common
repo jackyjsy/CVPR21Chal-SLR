@@ -1,0 +1,113 @@
+# the components of imagestack
+IMAGESTACK_OBJECTS = \
+    Calculus.o \
+	Color.o \
+	Complex.o \
+	Control.o \
+	Convolve.o \
+	DFT.o \
+	Display.o \
+	DisplayWindow.o \
+	Exception.o \
+	File.o \
+	FileEXR.o \
+	FileCSV.o \
+	FileHDR.o \
+	FileJPG.o \
+	FilePNG.o \
+	FileTMP.o \
+	FilePPM.o \
+	FileTGA.o \
+	FileTIFF.o \
+	FileFLO.o \
+	FileWAV.o \
+	Filter.o \
+	GaussTransform.o \
+	Geometry.o \
+	HDR.o \
+	Image.o \
+	LAHBPCG.o \
+	LightField.o \
+	Arithmetic.o \
+	Alignment.o \
+	NetworkOps.o \
+	Network.o \
+	Operation.o \
+	Paint.o \
+	Panorama.o \
+	PatchMatch.o \
+	Parser.o \
+	Prediction.o \
+	Projection.o \
+	Stack.o \
+	Statistics.o \
+	Wavelet.o \
+	WLS.o \
+	main.o \
+
+
+# This adds the appropriate defines for dependencies not included
+SDL_CCFLAGS ?= -DNO_SDL
+JPEG_CCFLAGS ?= -DNO_JPEG
+TIFF_CCFLAGS ?= -DNO_TIFF
+PNG_CCFLAGS ?= -DNO_PNG
+FFTW_CCFLAGS ?= -DNO_FFTW
+OPENEXR_CCFLAGS ?= -DNO_OPENEXR
+
+##########################
+# Top-level targets      #
+##########################
+
+all: $(BIN_TARGET) library joint_bilateral_mex
+
+clean:
+	-rm -f $(BIN_TARGET) lib/*.* bin/build/*.* lib/build/*.* include/*.* matlab/*.mexa64
+
+##########################
+# ImageStack the program #
+##########################
+
+$(BIN_TARGET): IMAGESTACK_CCFLAGS = $(BIN_CCFLAGS) $(SDL_CCFLAGS) $(JPEG_CCFLAGS) $(TIFF_CCFLAGS) $(PNG_CCFLAGS) $(FFTW_CCFLAGS) $(OPENEXR_CCFLAGS)
+$(BIN_TARGET): IMAGESTACK_LIBS = $(SDL_LIBS) $(JPEG_LIBS) $(TIFF_LIBS) $(PNG_LIBS) $(FFTW_LIBS) $(OPENEXR_LIBS)
+BIN_OBJECTS = $(foreach f,$(IMAGESTACK_OBJECTS),bin/build/$f)
+
+# Everything includes main.h. By precompiling that header we can speed up compilation about 30%
+bin/build/main.h.gch: src/main.h
+	g++ $(IMAGESTACK_CCFLAGS) -x c++-header -O3 -o bin/build/main.h.gch src/main.h
+
+$(BIN_TARGET): $(BIN_OBJECTS)
+	g++ $(IMAGESTACK_CCFLAGS) $(BIN_OBJECTS) $(IMAGESTACK_LIBS) -o $(BIN_TARGET)
+
+bin/build/%.o: src/%.cpp bin/build/main.h.gch
+	g++ -include bin/build/main.h $(IMAGESTACK_CCFLAGS) -c $< -o $@
+
+##########################
+# ImageStack the library #
+##########################
+
+$(LIB_TARGET): IMAGESTACK_CCFLAGS = $(LIB_CCFLAGS) -DNO_MAIN -DNO_SDL $(JPEG_CCFLAGS) $(TIFF_CCFLAGS) $(PNG_CCFLAGS) $(FFTW_CCFLAGS) $(OPENEXR_CCFLAGS)
+$(LIB_TARGET): IMAGESTACK_LIBS = $(JPEG_LIBS) $(TIFF_LIBS) $(PNG_LIBS) $(FFTW_LIBS) $(OPENEXR_LIBS)
+LIB_OBJECTS = $(foreach f,$(IMAGESTACK_OBJECTS),lib/build/$f)
+
+library: $(LIB_TARGET) include/ImageStack.h $(LIB_TARGET_MATLAB)
+
+lib/build/main.h.gch: src/main.h
+	g++ $(IMAGESTACK_CCFLAGS) -x c++-header -O3 -o lib/build/main.h.gch src/main.h
+
+$(LIB_TARGET): $(LIB_OBJECTS)
+	g++ $(LIB_FLAGS) $(LIB_OBJECTS) -o $(LIB_TARGET) $(IMAGESTACK_LIBS)
+
+$(LIB_TARGET_MATLAB): $(LIB_OBJECTS)
+	ar rcs $(LIB_TARGET_MATLAB) $(LIB_OBJECTS)
+
+include/ImageStack.h: src/ImageStack.h
+	cp src/*.h include
+
+lib/build/%.o: src/%.cpp lib/build/main.h.gch
+	g++ -include lib/build/main.h $(IMAGESTACK_CCFLAGS) -c $< -o $@
+
+##################
+# matlab wrapper #
+##################
+joint_bilateral_mex: $(LIB_TARGET_MATLAB) matlab/joint_bilateral_mex.cpp
+	$(MATLAB_ROOT_DIR)/bin/mex matlab/joint_bilateral_mex.cpp CXX="g++" CXXFLAGS="\$$CXXFLAGS $(IMAGESTACK_CCFLAGS) -Iinclude/ -fPIC " CXXLIBS="\$$CXXLIBS $(LIB_TARGET_MATLAB)" -output matlab/joint_bilateral_mex.mexa64

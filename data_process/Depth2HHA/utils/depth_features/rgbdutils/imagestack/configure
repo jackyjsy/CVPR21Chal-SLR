@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Copy and modify one of the makefiles in the makefiles directory to ./Makefile,"
+echo "then run make."
+echo
+echo "Alternatively, you can just run 'make -f makefiles/Makefile.whatever'"
+echo "to directly use one of the supplied example makefiles."

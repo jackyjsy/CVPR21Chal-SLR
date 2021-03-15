@@ -1,0 +1,57 @@
+BIN_CCFLAGS = -O3 -Winvalid-pch -Wall -Werror -pipe -fno-strict-aliasing -fomit-frame-pointer -fexpensive-optimizations -falign-functions=4 -funroll-loops -malign-double -fprefetch-loop-arrays -march=nocona -msse3 -mfpmath=sse -Wno-uninitialized -I /opt/local/include
+
+LIB_CCFLAGS = $(BIN_CCFLAGS)
+
+################
+# Dependencies #
+################
+
+# Needs the macports packages: fftw-3-single, openexr, libsdl, jpeg, tiff, png
+
+# Comment out any dependencies you do not wish to include, or do not have
+SDL_CCFLAGS = `sdl-config --cflags`
+SDL_LIBS = `sdl-config --libs`
+
+JPEG_CCFLAGS =
+JPEG_LIBS = -ljpeg
+
+TIFF_CCFLAGS =
+TIFF_LIBS = -ltiff
+
+PNG_CCFLAGS = 
+PNG_LIBS = -lpng
+
+FFTW_CCFLAGS = 
+FFTW_LIBS = -lfftw3f
+
+OPENEXR_CCFLAGS = -I /opt/local/include/OpenEXR
+OPENEXR_LIBS = -L/opt/local/lib -lImath -lHalf -lIex -lIlmImf
+
+#################################
+# Target names and installation #
+#################################
+
+BIN_TARGET = bin/ImageStack
+default: $(BIN_TARGET)
+LIB_TARGET = lib/libImageStack.dylib
+LIB_FLAGS = -dynamiclib -install_name /opt/local/lib/libImageStack.dylib
+
+install: $(BIN_TARGET)
+	cp $(BIN_TARGET) /opt/local/bin
+
+libinstall: library
+	cp $(LIB_TARGET) /opt/local/lib
+	mkdir -p /opt/local/include/ImageStack
+	cp include/*.h /opt/local/include/ImageStack/
+
+include Makefile.common
+
+
+
+
+
+
+
+
+
+

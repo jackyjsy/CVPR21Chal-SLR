@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{24973419-CB88-4CE2-BBF3-784748473206}</ProjectGuid>
+    <RootNamespace>ImageStacklib</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetExt>.lib</TargetExt>
+    <TargetName>ImageStack-x86-static-mtd</TargetName>
+    <OutDir>.\</OutDir>
+    <IntDir>$(Configuration).$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetExt>.lib</TargetExt>
+    <TargetName>ImageStack-x64-static-mtd</TargetName>
+    <OutDir>.\</OutDir>
+    <IntDir>$(Configuration).$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetExt>.lib</TargetExt>
+    <TargetName>ImageStack-x86-static-mt</TargetName>
+    <OutDir>.\</OutDir>
+    <IntDir>$(Configuration).$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetExt>.lib</TargetExt>
+    <TargetName>ImageStack-x64-static-mt</TargetName>
+    <OutDir>.\</OutDir>
+    <IntDir>$(Configuration).$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;NO_MAIN;NO_SDL;NO_OPENEXR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../include;../include/SDL</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4800;4305;4244;4290;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>libfftw-x86-static-mt.lib;libjpeg-x86-static-mt.lib;libpng-x86-static-mt.lib;libtiff-x86-static-mt.lib;SDL-x86-static-mt.lib;zlib-x86-static-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>../include;../include/SDL</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NO_MAIN;NO_SDL;NO_OPENEXR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4996;4800;4305;4244;4290;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <AdditionalDependencies>libfftw-x64-static-mt.lib;libjpeg-x64-static-mt.lib;libpng-x64-static-mt.lib;libtiff-x64-static-mt.lib;SDL-x64-static-mt.lib;zlib-x64-static-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;NO_MAIN;NO_SDL;NO_OPENEXR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../include;../include/SDL</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4800;4305;4244;4290;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>libfftw-x86-static-mt.lib;libjpeg-x86-static-mt.lib;libpng-x86-static-mt.lib;libtiff-x86-static-mt.lib;SDL-x86-static-mt.lib;zlib-x86-static-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;NO_MAIN;NO_SDL;NO_OPENEXR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../include;../include/SDL</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4800;4305;4244;4290;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <AdditionalDependencies>libfftw-x64-static-mt.lib;libjpeg-x64-static-mt.lib;libpng-x64-static-mt.lib;libtiff-x64-static-mt.lib;SDL-x64-static-mt.lib;zlib-x64-static-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Alignment.h" />
+    <ClInclude Include="..\..\src\Arithmetic.h" />
+    <ClInclude Include="..\..\src\Calculus.h" />
+    <ClInclude Include="..\..\src\Color.h" />
+    <ClInclude Include="..\..\src\Complex.h" />
+    <ClInclude Include="..\..\src\Control.h" />
+    <ClInclude Include="..\..\src\Convolve.h" />
+    <ClInclude Include="..\..\src\DenseGrid.h" />
+    <ClInclude Include="..\..\src\DFT.h" />
+    <ClInclude Include="..\..\src\Display.h" />
+    <ClInclude Include="..\..\src\DisplayWindow.h" />
+    <ClInclude Include="..\..\src\eigenvectors.h" />
+    <ClInclude Include="..\..\src\Exception.h" />
+    <ClInclude Include="..\..\src\File.h" />
+    <ClInclude Include="..\..\src\FileNotImplemented.h" />
+    <ClInclude Include="..\..\src\Filter.h" />
+    <ClInclude Include="..\..\src\GaussTransform.h" />
+    <ClInclude Include="..\..\src\Geometry.h" />
+    <ClInclude Include="..\..\src\GKDTree.h" />
+    <ClInclude Include="..\..\src\HDR.h" />
+    <ClInclude Include="..\..\src\Image.h" />
+    <ClInclude Include="..\..\src\ImageStack.h" />
+    <ClInclude Include="..\..\src\LAHBPCG.h" />
+    <ClInclude Include="..\..\src\LightField.h" />
+    <ClInclude Include="..\..\src\LinearAlgebra.h" />
+    <ClInclude Include="..\..\src\macros.h" />
+    <ClInclude Include="..\..\src\main.h" />
+    <ClInclude Include="..\..\src\Network.h" />
+    <ClInclude Include="..\..\src\NetworkOps.h" />
+    <ClInclude Include="..\..\src\Operation.h" />
+    <ClInclude Include="..\..\src\Paint.h" />
+    <ClInclude Include="..\..\src\Panorama.h" />
+    <ClInclude Include="..\..\src\Parser.h" />
+    <ClInclude Include="..\..\src\PatchMatch.h" />
+    <ClInclude Include="..\..\src\Permutohedral.h" />
+    <ClInclude Include="..\..\src\Prediction.h" />
+    <ClInclude Include="..\..\src\Projection.h" />
+    <ClInclude Include="..\..\src\Stack.h" />
+    <ClInclude Include="..\..\src\Statistics.h" />
+    <ClInclude Include="..\..\src\tables.h" />
+    <ClInclude Include="..\..\src\Wavelet.h" />
+    <ClInclude Include="..\..\src\WLS.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Alignment.cpp" />
+    <ClCompile Include="..\..\src\Arithmetic.cpp" />
+    <ClCompile Include="..\..\src\Calculus.cpp" />
+    <ClCompile Include="..\..\src\Color.cpp" />
+    <ClCompile Include="..\..\src\Complex.cpp" />
+    <ClCompile Include="..\..\src\Control.cpp" />
+    <ClCompile Include="..\..\src\Convolve.cpp" />
+    <ClCompile Include="..\..\src\DFT.cpp" />
+    <ClCompile Include="..\..\src\Display.cpp" />
+    <ClCompile Include="..\..\src\DisplayWindow.cpp" />
+    <ClCompile Include="..\..\src\Exception.cpp" />
+    <ClCompile Include="..\..\src\File.cpp" />
+    <ClCompile Include="..\..\src\FileCSV.cpp" />
+    <ClCompile Include="..\..\src\FileEXR.cpp" />
+    <ClCompile Include="..\..\src\FileFLO.cpp" />
+    <ClCompile Include="..\..\src\FileHDR.cpp" />
+    <ClCompile Include="..\..\src\FileJPG.cpp" />
+    <ClCompile Include="..\..\src\FilePNG.cpp" />
+    <ClCompile Include="..\..\src\FilePPM.cpp" />
+    <ClCompile Include="..\..\src\FileTGA.cpp" />
+    <ClCompile Include="..\..\src\FileTIFF.cpp" />
+    <ClCompile Include="..\..\src\FileTMP.cpp" />
+    <ClCompile Include="..\..\src\FileWAV.cpp" />
+    <ClCompile Include="..\..\src\Filter.cpp" />
+    <ClCompile Include="..\..\src\GaussTransform.cpp" />
+    <ClCompile Include="..\..\src\Geometry.cpp" />
+    <ClCompile Include="..\..\src\HDR.cpp" />
+    <ClCompile Include="..\..\src\Image.cpp" />
+    <ClCompile Include="..\..\src\LAHBPCG.cpp" />
+    <ClCompile Include="..\..\src\LightField.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\Network.cpp" />
+    <ClCompile Include="..\..\src\NetworkOps.cpp" />
+    <ClCompile Include="..\..\src\Operation.cpp" />
+    <ClCompile Include="..\..\src\Paint.cpp" />
+    <ClCompile Include="..\..\src\Panorama.cpp" />
+    <ClCompile Include="..\..\src\Parser.cpp" />
+    <ClCompile Include="..\..\src\PatchMatch.cpp" />
+    <ClCompile Include="..\..\src\Prediction.cpp" />
+    <ClCompile Include="..\..\src\Projection.cpp" />
+    <ClCompile Include="..\..\src\Stack.cpp" />
+    <ClCompile Include="..\..\src\Statistics.cpp" />
+    <ClCompile Include="..\..\src\Wavelet.cpp" />
+    <ClCompile Include="..\..\src\WLS.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,57 @@
+BIN_CCFLAGS = -O3 -Winvalid-pch -Wall -Werror -pipe -fno-strict-aliasing -fomit-frame-pointer -fexpensive-optimizations -falign-functions=4 -funroll-loops -malign-double -fprefetch-loop-arrays -march=core2 -msse3 -mfpmath=sse -Wno-uninitialized -enable-auto-import
+
+LIB_CCFLAGS = $(BIN_CCFLAGS)
+
+################
+# Dependencies #
+################
+
+# Comment out any dependencies you do not wish to include, or do not have
+SDL_CCFLAGS = -I/usr/local/include/SDL
+SDL_LIBS = -lSDL
+
+JPEG_CCFLAGS = 
+JPEG_LIBS = -ljpeg
+
+TIFF_CCFLAGS = 
+TIFF_LIBS = -ltiff
+
+PNG_CCFLAGS =
+PNG_LIBS = -lpng
+
+FFTW_CCFLAGS = 
+FFTW_LIBS = -lfftw3f
+
+# By default we don't include OpenEXR, because most people won't have it installed
+#OPENEXR_CCFLAGS = -I /usr/local/include/OpenEXR
+#OPENEXR_LIBS = -L/usr/local/lib -lImath -lHalf -lIex -lIlmImf
+
+#################################
+# Target names and installation #
+#################################
+
+BIN_TARGET = bin/ImageStack.exe
+default: $(BIN_TARGET)
+LIB_TARGET = lib/cygImageStack.dll
+
+LIB_FLAGS = -shared -Wl,--out-implib=lib/libImageStack.dll.a -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--whole-archive -Wl,--no-whole-archive 
+
+install: $(BIN_TARGET)
+	cp $(BIN_TARGET) /usr/local/bin
+
+libinstall: library
+	cp lib/lib*.dll.a /usr/local/lib
+	cp lib/cyg*.dll /usr/local/bin
+	mkdir -p /usr/local/include/ImageStack
+	cp include/*.h /usr/local/include/ImageStack/
+
+include Makefile.common
+
+
+
+
+
+
+
+
+

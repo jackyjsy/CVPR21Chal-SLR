@@ -21,9 +21,9 @@ Get frames from RGB videos and crop to 256x256 according to the whole-pose skele
 ## Generate flow data from rgb and depth videos
 There are two types of flow modality: color flow and depth flow. Those data can be obtained by pretrained Caffe model first. Then combine flow_x and flow_y and crop the combined flow data using gen_flow.py.
 
-1. Obtain raw flow data from videos using pretrained caffe model:
+1. Obtain raw flow data from videos using docker as described in optical_flow_guidelines.docx
 
-2.  Change folder, npy_folder, out_folder in gen_flow.py, then run `python gen_flow.py`
+2. Change folder, npy_folder, out_folder in gen_flow.py, then run `python gen_flow.py`
 
 ## Generate HHA representation from depth videos
 

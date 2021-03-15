@@ -48,7 +48,7 @@ Detailed enviroment requirment can be found in requirement.txt in each code fold
 
 For convenience, we provide a Nvidia docker image to run our code. 
 
-[Docker Image](https://drive.google.com/file/d/1xDRhWW8mnZFXZw0c7pQZkDktHCmM9vL2/view?usp=sharing)
+[Download Docker Image](https://drive.google.com/file/d/1xDRhWW8mnZFXZw0c7pQZkDktHCmM9vL2/view?usp=sharing)
 
 ## Pretrained models and reproducing submitted results
 We provide pretrained models for all modalities to reproduce our submitted results. Please download them at and put them into corresponding folders.

@@ -1,7 +1,7 @@
 # Skeleton Based Sign Language Recognition
 ## Data preparation
 1. Extract whole-body keypoints data following the instruction in ../data_process/wholepose
-3. Run he following code to prepare the data for GCN.
+2. Run he following code to prepare the data for GCN.
 
         cd data_gen/
         python sign_gendata.py

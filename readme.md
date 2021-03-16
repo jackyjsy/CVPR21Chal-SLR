@@ -3,20 +3,22 @@ Isolated Sign Language Recognition with Multi-modal Models
 
 This repo contains the code to reproduce our results on [2021 Looking at People Large Scale Signer Independent Isolated SLR CVPR Challenge](http://chalearnlap.cvc.uab.es/challenge/43/description/).
 
-In this repo, we provide trained models and a step-by-step instruction to train, test our models and reproduce our final results. We also provide a docker file to quick deployment of environment setup. 
+In this repo, we provide trained models and a step-by-step instruction to train, test our models and reproduce our final results. We also provide a docker file for quick deployment of our environment setup. 
 We are going to submit a paper to the workshop associated with this challenge to provide more details about our work. Please consider cite that paper if you find this repo useful in your research.
 
 ## News
 
-Our team (smilelab2021) ranked 1st in this challenge and here's the leaderboard link: 
+[2021/03/15] The code is released to public on GitHub.
 
-1. [RGB](https://competitions.codalab.org/competitions/27901#results)
+[2021/03/11] Our team (smilelab2021) ranked 1st in both tracks and here's the links to the leaderboards: 
 
-2. [RGBD](https://competitions.codalab.org/competitions/27902#results)
+* [RGB](https://competitions.codalab.org/competitions/27901#results)
+
+* [RGBD](https://competitions.codalab.org/competitions/27902#results)
 
 
 
-## Prepare and Process Data
+## Data Preparation and Processing
 
 There are six modalities in total: skeleton, skeleton features, rgb frames, flow color, hha and flow depth. 
 
@@ -57,7 +59,7 @@ We provide pretrained models for all modalities to reproduce our submitted resul
 
 To test our pretrained model, please put them under each code folders and run the test code as instructed below. To ensemble the tested results and reproduce our final submission. Please copy all the results .pkl files to ensemble/ and follow the instruction to ensemble our final outputs.
 
-## Skeleton 
+## Skeleton Keypoints
 Skeleton modality can be trained, finetuned and tested using the code in GCN/ folder. Please follow the GCN/readme.md instruction to prepare skeleton data into four streams (joint, bone, joint_motion, bone motion).
 
 Basic usage:

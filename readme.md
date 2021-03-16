@@ -1,6 +1,10 @@
 Isolated Sign Language Recognition with Multi-modal Models
 =========
+By [Songyao Jiang](https://www.songyaojiang.com/), Bin Sun, [Lichen Wang](https://sites.google.com/site/lichenwang123/), [Yue Bai](https://yueb17.github.io/), [Kunpeng Li](https://kunpengli1994.github.io/) and [Yun Fu](http://www1.ece.neu.edu/~yunfu/).
 
+[Smile Lab @ Northeastern University](https://web.northeastern.edu/smilelab/)
+
+----
 This repo contains the code to reproduce our results on [2021 Looking at People Large Scale Signer Independent Isolated SLR CVPR Challenge](http://chalearnlap.cvc.uab.es/challenge/43/description/).
 
 In this repo, we provide trained models and a step-by-step instruction to train, test our models and reproduce our final results. We also provide a docker file for quick deployment of our environment setup. 
@@ -36,7 +40,7 @@ We provide preprocessed test data of all modalities to reproduce our submitted r
 
     ----test/
 
-2. Follow the data_processs/readme.md to process the data.
+2. Follow the [data_processs/readme.md](data_processs/readme.md) to process the data.
 
 3. Use TPose/data_process to extract wholebody pose features.
 
@@ -60,13 +64,13 @@ We provide pretrained models for all modalities to reproduce our submitted resul
 To test our pretrained model, please put them under each code folders and run the test code as instructed below. To ensemble the tested results and reproduce our final submission. Please copy all the results .pkl files to ensemble/ and follow the instruction to ensemble our final outputs.
 
 ## Skeleton Keypoints
-Skeleton modality can be trained, finetuned and tested using the code in GCN/ folder. Please follow the GCN/readme.md instruction to prepare skeleton data into four streams (joint, bone, joint_motion, bone motion).
+Skeleton modality can be trained, finetuned and tested using the code in GCN/ folder. Please follow the [GCN/readme.md](GCN/readme.md) instruction to prepare skeleton data into four streams (joint, bone, joint_motion, bone motion).
 
 Basic usage:
 
     python main.py --config /path/to/config/file
 
-To train, finetune and test our models, please change the config path to corresponding config files. Detailed instruction can be found in GCN/readme.md
+To train, finetune and test our models, please change the config path to corresponding config files. Detailed instruction can be found in [GCN/readme.md](GCN/readme.md)
 
 ## Skeleton Feature (TPose)
 Follow the instruction in TPose/ to prepare the data, train and test the model.
@@ -91,7 +95,7 @@ The Flow Color modality can be trained, finetuned and tested using the following
 
     python Sign_Isolated_Conv3D_flow_clip_test.py
 
-Detailed instruction can be found in Conv3D/readme.md
+Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
 ## HHA
 The HHA modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
@@ -102,7 +106,7 @@ The HHA modality can be trained, finetuned and tested using the following comman
 
     python Sign_Isolated_Conv3D_hha_clip_mask_test.py
 
-Detailed instruction can be found in Conv3D/readme.md
+Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
 ## Flow Depth 
 The Flow Depth modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
@@ -113,7 +117,7 @@ The Flow Depth modality can be trained, finetuned and tested using the following
 
     python Sign_Isolated_Conv3D_depth_flow_clip_test.py
 
-Detailed instruction can be found in Conv3D/readme.md
+Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
 ## Model Ensemble
 For both RGB and RGBD track, the tested results of all modalities need to be ensemble together to generate the final results. 
@@ -140,7 +144,7 @@ For both RGB and RGBD track, the tested results of all modalities need to be ens
         python ensemble_multimodal_rgb.py
     
 
-To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble and obtain our final submitted predictions. Detailed instruction can be find in ensemble/readme.md
+To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble and obtain our final submitted predictions. Detailed instruction can be find in [ensemble/readme.md](ensemble/readme.md)
 
 ## Reference
 
@@ -159,3 +163,7 @@ This project is released under the Apache 2.0 license.
 
 ## Citation
 If you find this project useful in your research, please consider cite:
+
+```
+% bibtex to be updated
+```

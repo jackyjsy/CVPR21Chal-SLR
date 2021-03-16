@@ -159,7 +159,11 @@ https://github.com/0aqz0/SLR
 https://github.com/kchengiva/DecoupleGCN-DropGraph
 
 ## License
-This project is released under the Apache 2.0 license with a exception that commercial usage is prohibited. If you are interested in a commercial license, please contact us.
+This project is released under the Apache 2.0 license with exceptions:
+
+Published versions (changed or unchanged) must include a reference to the origin of the code (my extension source code).
+
+Commercial usage is prohibited. 
 
 ## Citation
 If you find this project useful in your research, please consider cite:

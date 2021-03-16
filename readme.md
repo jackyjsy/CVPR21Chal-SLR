@@ -8,7 +8,7 @@ We are going to submit a paper to the workshop associated with this challenge to
 
 ## News
 
-[2021/03/15] The code is released to public on GitHub.
+[2021/03/15] The code is released to public on [GitHub](https://github.com/jackyjsy/CVPR21Chal-SLR).
 
 [2021/03/11] Our team (smilelab2021) ranked 1st in both tracks and here's the links to the leaderboards: 
 

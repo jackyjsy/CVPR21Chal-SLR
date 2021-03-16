@@ -161,9 +161,9 @@ https://github.com/kchengiva/DecoupleGCN-DropGraph
 ## License
 This project is released under the Apache 2.0 license with exceptions:
 
-Published versions (changed or unchanged) must include a reference to the origin of the code (my extension source code).
+Commercial usage is prohibited.
 
-Commercial usage is prohibited. 
+Published versions (changed or unchanged) must include a reference to the origin of the code (my extension source code).
 
 ## Citation
 If you find this project useful in your research, please consider cite:

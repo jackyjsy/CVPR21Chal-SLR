@@ -166,8 +166,15 @@ Commercial usage is prohibited.
 Published versions (changed or unchanged) must include a reference to the origin of the code (my extension source code).
 
 ## Citation
-If you find this project useful in your research, please consider cite:
+If you find this project useful in your research, please cite our preprint fact sheet version:
 
 ```
-% bibtex to be updated
+@article{jiang2021skeleton,
+  title={Skeleton Based Sign Language Recognition Using Whole-body Keypoints},
+  author={Jiang, Songyao and Sun, Bin and Wang, Lichen and Bai, Yue and Li, Kunpeng and Fu, Yun},
+  journal={arXiv preprint arXiv:2103.08833},
+  year={2021}
+}
 ```
+
+The workshop version of our paper will be updated here later.

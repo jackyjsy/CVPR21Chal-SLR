@@ -47,7 +47,7 @@ We provide preprocessed test data of all modalities to reproduce our submitted r
 
 
 
-## Requirments and Docker Images
+## Requirements and Docker Images
 
 The code is written using Anaconda Python >= 3.6 and Pytorch 1.7 with OpenCV.
 

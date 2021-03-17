@@ -177,4 +177,4 @@ If you find this project useful in your research, please cite our preprint fact 
 }
 ```
 
-The workshop version of our paper will be updated here later.
+The workshop version of our paper will be updated here soon.

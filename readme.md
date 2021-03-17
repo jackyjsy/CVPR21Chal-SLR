@@ -4,6 +4,7 @@ By [Songyao Jiang](https://www.songyaojiang.com/), Bin Sun, [Lichen Wang](https:
 
 [Smile Lab @ Northeastern University](https://web.northeastern.edu/smilelab/)
 
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/skeleton-based-sign-language-recognition/sign-language-recognition-on-autsl)](https://paperswithcode.com/sota/sign-language-recognition-on-autsl?p=skeleton-based-sign-language-recognition)
 ----
 This repo contains the code to reproduce our results on [2021 Looking at People Large Scale Signer Independent Isolated SLR CVPR Challenge](http://chalearnlap.cvc.uab.es/challenge/43/description/).
 

@@ -1,6 +1,7 @@
 Instructions to reproduce our results using pretrained models
 =====
-### I: Please download the pretrained the zip files should be decompressed and move to their folders:
+Here we provide a step-step instruction to reproduce our results using our docker image.
+### I: The zip files of pretrained models should be decompressed and move to their folders:
 
 * Conv3D/pretrained.zip needs to be decompressed and put in Conv3D/ folder in our code repo. (contains pretrained RGB model using Chinese Sign Language dataset)
 * Conv3D/final_models_finetuned.zip needs to be decompressed and put in Conv3D/ folder in our code repo. (contains pretrained our final models of all modalities)

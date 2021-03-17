@@ -57,15 +57,17 @@ For convenience, we provide a Nvidia docker image to run our code.
 
 [Download Docker Image](https://drive.google.com/file/d/1xDRhWW8mnZFXZw0c7pQZkDktHCmM9vL2/view?usp=sharing)
 
-## Pretrained models and reproducing submitted results
+## Pretrained models
 We provide pretrained models for all modalities to reproduce our submitted results. Please download them at and put them into corresponding folders.
 
 [Download Pretrained Models](https://drive.google.com/drive/folders/1VcbTfnRa95XYxRB6JPdTiHvIzipqQeW3?usp=sharing)
 
-To test our pretrained model, please put them under each code folders and run the test code as instructed below. To ensemble the tested results and reproduce our final submission. Please copy all the results .pkl files to ensemble/ and follow the instruction to ensemble our final outputs.
+
 
 ## Reproducing the results submitted to CVPR21 Challenge
-Please follow [reproduce.md](reproduce.md) to reproduce our results using pretrained models and preprocessed data.
+To test our pretrained model, please put them under each code folders and run the test code as instructed below. To ensemble the tested results and reproduce our final submission. Please copy all the results .pkl files to ensemble/ and follow the instruction to ensemble our final outputs.
+
+For a step-by-step instruction, please see [reproduce.md](reproduce.md).
 
 ## Skeleton Keypoints
 Skeleton modality can be trained, finetuned and tested using the code in GCN/ folder. Please follow the [GCN/readme.md](GCN/readme.md) instruction to prepare skeleton data into four streams (joint, bone, joint_motion, bone motion).

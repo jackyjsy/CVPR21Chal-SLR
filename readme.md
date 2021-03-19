@@ -32,9 +32,9 @@ We are going to submit a paper to the workshop associated with this challenge to
 * [Depth HHA](#HHA)
 * [Depth Flow](#Depth-Flow)
 * [Model Ensemble](#Model-Ensemble)
-* [Reference](#Reference)
 * [License](#License)
 * [Citation](#Citation)
+* [Reference](#Reference)
 
 ## Data Preparation and Processing
 
@@ -167,21 +167,7 @@ For both RGB and RGBD track, the tested results of all modalities need to be ens
 
 To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble and obtain our final submitted predictions. Detailed instruction can be find in [ensemble/readme.md](ensemble/readme.md)
 
-## Reference
 
-https://github.com/Sun1992/SSTCN-for-SLR
-
-https://github.com/jin-s13/COCO-WholeBody
-
-https://github.com/open-mmlab/mmpose
-
-https://github.com/0aqz0/SLR
-
-https://github.com/kchengiva/DecoupleGCN-DropGraph
-
-https://github.com/HRNet/HRNet-Human-Pose-Estimation
-
-https://github.com/charlesCXK/Depth2HHA
 
 ## License
 This project is released under the Creative Commons Zero v1.0 Universal license with exceptions:
@@ -203,3 +189,19 @@ If you find this project useful in your research, please cite our preprint fact 
 ```
 
 The workshop version of our paper will be updated here soon.
+
+## Reference
+
+https://github.com/Sun1992/SSTCN-for-SLR
+
+https://github.com/jin-s13/COCO-WholeBody
+
+https://github.com/open-mmlab/mmpose
+
+https://github.com/0aqz0/SLR
+
+https://github.com/kchengiva/DecoupleGCN-DropGraph
+
+https://github.com/HRNet/HRNet-Human-Pose-Estimation
+
+https://github.com/charlesCXK/Depth2HHA

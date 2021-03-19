@@ -27,9 +27,9 @@ We are going to submit a paper to the workshop associated with this challenge to
 
 Download [AUTSL Dataset](http://chalearnlap.cvc.uab.es/dataset/40/description/). 
 
-There are six modalities in total: skeleton, skeleton features, rgb frames, flow color, hha and flow depth. 
+We processed the dataset into six modalities in total: skeleton, skeleton features, rgb frames, flow color, hha and flow depth. 
 
-We provide preprocessed test data of all modalities to reproduce our submitted results.
+Preprocessed test data of all modalities are provided to reproduce our submitted results. 
 
 [Download Processed Test Data](https://drive.google.com/drive/folders/1Skz9sbQUhciPUS4Ta76w5ZraCN5cYeuc?usp=sharing)
 

@@ -21,8 +21,8 @@ We are going to submit a paper to the workshop associated with this challenge to
 
 
 ## Table of Contents
-* [Data Preparation and Processing](#Data-Preparation-and-Processing)
-* [Requirements and Docker Images](#Requirements-and-Docker-Images)
+* [Data Preparation](#Data-Preparation)
+* [Requirements and Docker Image](#Requirements-and-Docker-Image)
 * [Pretrained Models](#Pretrained-Models)
 * [Reproducing the Results](#Reproducing-the-Results-Submitted-to-CVPR21-Challenge)
 * [Skeleton Keypoints](#Skeleton-Keypoints)
@@ -36,7 +36,7 @@ We are going to submit a paper to the workshop associated with this challenge to
 * [Citation](#Citation)
 * [Reference](#Reference)
 
-## Data Preparation and Processing
+## Data Preparation
 
 Download [AUTSL Dataset](http://chalearnlap.cvc.uab.es/dataset/40/description/). 
 
@@ -60,7 +60,7 @@ We processed the dataset into six modalities in total: skeleton, skeleton featur
 
 
 
-## Requirements and Docker Images
+## Requirements and Docker Image
 
 The code is written using Anaconda Python >= 3.6 and Pytorch 1.7 with OpenCV.
 

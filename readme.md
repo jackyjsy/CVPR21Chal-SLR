@@ -154,7 +154,7 @@ To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble a
 
 ## Reference
 
-https://github.com/Sun1992/T-Pose-model-for-SLR
+https://github.com/Sun1992/SSTCN-for-SLR
 
 https://github.com/jin-s13/COCO-WholeBody
 

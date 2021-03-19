@@ -20,6 +20,21 @@ We are going to submit a paper to the workshop associated with this challenge to
 * [RGB](https://competitions.codalab.org/competitions/27901#results) / [RGBD](https://competitions.codalab.org/competitions/27902#results)
 
 
+## Table of Contents
+* [Data Preparation and Processing](#Data-Preparation-and-Processing)
+* [Requirements and Docker Images](#Requirements-and-Docker-Images)
+* [Pretrained Models](#Pretrained-Models)
+* [Reproducing the Results](#Reproducing-the-Results-Submitted-to-CVPR21-Challenge)
+* [Skeleton Keypoints](#Skeleton-Keypoints)
+* [Skeleton Feature](#Skeleton-Feature)
+* [RGB Frames](#RGB-Frames)
+* [Optical Flow](#Optical-Flow)
+* [Depth HHA](#HHA)
+* [Depth Flow](#Depth-Flow)
+* [Model Ensemble](#Model-Ensemble)
+* [Reference](#Reference)
+* [License](#License)
+* [Citation](#Citation)
 
 ## Data Preparation and Processing
 
@@ -55,7 +70,7 @@ For convenience, we provide a Nvidia docker image to run our code.
 
 [Download Docker Image](https://drive.google.com/file/d/1xDRhWW8mnZFXZw0c7pQZkDktHCmM9vL2/view?usp=sharing)
 
-## Pretrained models
+## Pretrained Models
 We provide pretrained models for all modalities to reproduce our submitted results. Please download them at and put them into corresponding folders.
 
 [Download Pretrained Models](https://drive.google.com/drive/folders/1VcbTfnRa95XYxRB6JPdTiHvIzipqQeW3?usp=sharing)
@@ -92,8 +107,8 @@ The RGB frames modality can be trained, finetuned and tested using the following
 
 Detailed instruction can be found in Conv3D/readme.md
 
-## Flow Color 
-The Flow Color modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
+## Optical Flow
+The RGB optical flow modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_flow_clip.py
 
@@ -103,8 +118,8 @@ The Flow Color modality can be trained, finetuned and tested using the following
 
 Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
-## HHA
-The HHA modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
+## Depth HHA
+The Depth HHA modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_hha_clip_mask.py
 
@@ -114,8 +129,8 @@ The HHA modality can be trained, finetuned and tested using the following comman
 
 Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
-## Flow Depth 
-The Flow Depth modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
+## Depth Flow
+The Depth Flow modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_depth_flow_clip.py
 

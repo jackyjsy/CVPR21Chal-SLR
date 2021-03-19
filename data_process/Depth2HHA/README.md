@@ -1,4 +1,11 @@
 # Depth2HHA
+https://github.com/charlesCXK/Depth2HHA
+
+Please use CVPR21Chal_convert_HHA.m to extract HHA features from AUTSL dataset.
+
+The followings are original readme from the above repo.
+
+----
 
 ### Introduction
 
@@ -63,7 +70,7 @@ tar -xf eccv14-data.tgz
 
 ----
 
-### Results
+<!-- ### Results
 
 Pictures below are RGB, Depth, Raw-depth, HHA in turn.
 
@@ -73,4 +80,4 @@ Pictures below are RGB, Depth, Raw-depth, HHA in turn.
 
 <img src='demo-data/1_rawdepth.png' width='400'>
 
-<img src='demo-data/1_hha.png' width='400'>
+<img src='demo-data/1_hha.png' width='400'> -->

@@ -179,6 +179,10 @@ https://github.com/0aqz0/SLR
 
 https://github.com/kchengiva/DecoupleGCN-DropGraph
 
+https://github.com/HRNet/HRNet-Human-Pose-Estimation
+
+https://github.com/charlesCXK/Depth2HHA
+
 ## License
 This project is released under the Creative Commons Zero v1.0 Universal license with exceptions:
 

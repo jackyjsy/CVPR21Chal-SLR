@@ -30,7 +30,7 @@ We are going to submit a paper to the workshop associated with this challenge to
     * [Skeleton Feature](#Skeleton-Feature)
     * [RGB Frames](#RGB-Frames)
     * [Optical Flow](#Optical-Flow)
-    * [Depth HHA](#HHA)
+    * [Depth HHA](#Depth-HHA)
     * [Depth Flow](#Depth-Flow)
     * [Model Ensemble](#Model-Ensemble)
 * [License](#License)

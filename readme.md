@@ -76,13 +76,13 @@ We provide pretrained models for all modalities to reproduce our submitted resul
 [Download Pretrained Models](https://drive.google.com/drive/folders/1VcbTfnRa95XYxRB6JPdTiHvIzipqQeW3?usp=sharing)
 
 
-
-## Reproducing the Results Submitted to CVPR21 Challenge
+## Usage
+### Reproducing the Results Submitted to CVPR21 Challenge
 To test our pretrained model, please put them under each code folders and run the test code as instructed below. To ensemble the tested results and reproduce our final submission. Please copy all the results .pkl files to ensemble/ and follow the instruction to ensemble our final outputs.
 
 For a step-by-step instruction, please see [reproduce.md](reproduce.md).
 
-## Skeleton Keypoints
+### Skeleton Keypoints
 Skeleton modality can be trained, finetuned and tested using the code in GCN/ folder. Please follow the [GCN/readme.md](GCN/readme.md) instruction to prepare skeleton data into four streams (joint, bone, joint_motion, bone motion).
 
 Basic usage:
@@ -91,12 +91,12 @@ Basic usage:
 
 To train, finetune and test our models, please change the config path to corresponding config files. Detailed instruction can be found in [GCN/readme.md](GCN/readme.md)
 
-## Skeleton Feature
+### Skeleton Feature
 For the skeleton feature, we propose a [Separable Spatial-Temporal Convolution Network (SSTCN)](https://github.com/Sun1992/SSTCN-for-SLR) to capture spatio-temporal information from those features.
 
 Please follow the instruction in [SSTCN/readme.txt](SSTCN/readme.txt) to prepare the data, train and test the model.
 
-## RGB Frames 
+### RGB Frames 
 The RGB frames modality can be trained, finetuned and tested using the following commands in Conv3D/ folder.  
 
     python Sign_Isolated_Conv3D_clip.py
@@ -107,7 +107,7 @@ The RGB frames modality can be trained, finetuned and tested using the following
 
 Detailed instruction can be found in Conv3D/readme.md
 
-## Optical Flow
+### Optical Flow
 The RGB optical flow modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_flow_clip.py
@@ -118,7 +118,7 @@ The RGB optical flow modality can be trained, finetuned and tested using the fol
 
 Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
-## Depth HHA
+### Depth HHA
 The Depth HHA modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_hha_clip_mask.py
@@ -129,7 +129,7 @@ The Depth HHA modality can be trained, finetuned and tested using the following 
 
 Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
-## Depth Flow
+### Depth Flow
 The Depth Flow modality can be trained, finetuned and tested using the following commands in Conv3D/ folder. 
 
     python Sign_Isolated_Conv3D_depth_flow_clip.py
@@ -140,7 +140,7 @@ The Depth Flow modality can be trained, finetuned and tested using the following
 
 Detailed instruction can be found in [Conv3D/readme.md](Conv3D/readme.md)
 
-## Model Ensemble
+### Model Ensemble
 For both RGB and RGBD track, the tested results of all modalities need to be ensemble together to generate the final results. 
 
 1. For RGB track, we use the results from skeleton, skeleton feature, rgb, and flow color modalities to ensemble the final results. 

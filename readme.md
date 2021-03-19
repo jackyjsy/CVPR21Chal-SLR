@@ -25,11 +25,13 @@ We are going to submit a paper to the workshop associated with this challenge to
 
 ## Data Preparation and Processing
 
+Download [AUTSL Dataset](http://chalearnlap.cvc.uab.es/dataset/40/description/). 
+
 There are six modalities in total: skeleton, skeleton features, rgb frames, flow color, hha and flow depth. 
 
 We provide preprocessed test data of all modalities to reproduce our submitted results.
 
-[Download via Google Drive](https://drive.google.com/drive/folders/1Skz9sbQUhciPUS4Ta76w5ZraCN5cYeuc?usp=sharing)
+[Download Processed Test Data](https://drive.google.com/drive/folders/1Skz9sbQUhciPUS4Ta76w5ZraCN5cYeuc?usp=sharing)
 
 1. Please put original train, val, test videos in data folder as
 

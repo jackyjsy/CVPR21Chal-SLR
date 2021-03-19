@@ -78,8 +78,10 @@ Basic usage:
 
 To train, finetune and test our models, please change the config path to corresponding config files. Detailed instruction can be found in [GCN/readme.md](GCN/readme.md)
 
-## Skeleton Feature (TPose)
-Follow the instruction in TPose/ to prepare the data, train and test the model.
+## Skeleton Feature (SSTCN)
+For the skeleton feature, we propose a [SSTCN](https://github.com/Sun1992/SSTCN-for-SLR) to capture spatio-temporal information from those features.
+
+Please follow the instruction in [SSTCN/readme.txt](SSTCN/readme.txt) to prepare the data, train and test the model.
 
 ## RGB Frames 
 The RGB frames modality can be trained, finetuned and tested using the following commands in Conv3D/ folder.  

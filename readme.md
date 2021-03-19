@@ -66,7 +66,7 @@ We provide pretrained models for all modalities to reproduce our submitted resul
 
 
 
-## Reproducing the results submitted to CVPR21 Challenge
+## Reproducing the Results Submitted to CVPR21 Challenge
 To test our pretrained model, please put them under each code folders and run the test code as instructed below. To ensemble the tested results and reproduce our final submission. Please copy all the results .pkl files to ensemble/ and follow the instruction to ensemble our final outputs.
 
 For a step-by-step instruction, please see [reproduce.md](reproduce.md).

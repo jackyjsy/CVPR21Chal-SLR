@@ -13,7 +13,7 @@ We are going to submit a paper to the workshop associated with this challenge to
 
 ## News
 
-[2021/03/20] Our work has been verified and announced by the organizers as the 1st place winner of the challenge! ([Link](https://competitions.codalab.org/forums/24597/5355/))
+[2021/03/20] Our work has been verified and [announced](https://competitions.codalab.org/forums/24597/5355/) by the organizers as the 1st place winner of the challenge!
 
 [2021/03/15] The code is released to public on [GitHub](https://github.com/jackyjsy/CVPR21Chal-SLR).
 

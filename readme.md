@@ -15,7 +15,7 @@ We are going to submit a paper to the workshop associated with this challenge to
 
 [2021/03/15] The code is released to public on [GitHub](https://github.com/jackyjsy/CVPR21Chal-SLR).
 
-[2021/03/11] Our team (smilelab2021) ranked 1st in both tracks and here's the links to the leaderboards: 
+[2021/03/11] Our team (smilelab2021) ranked 1st in both tracks and here are the links to the leaderboards: 
 
 * [RGB](https://competitions.codalab.org/competitions/27901#results) / [RGBD](https://competitions.codalab.org/competitions/27902#results)
 

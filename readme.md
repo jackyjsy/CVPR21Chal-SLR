@@ -184,7 +184,7 @@ If you find this project useful in your research, please cite our preprint fact 
 
 ```
 @article{jiang2021skeleton,
-  title={Skeleton Based Isolated Sign Language Recognition Using Whole-body Keypoints in a Universal Multi-modal Framework},
+  title={Skeleton Aware Multi-modal Sign Language Recognition},
   author={Jiang, Songyao and Sun, Bin and Wang, Lichen and Bai, Yue and Li, Kunpeng and Fu, Yun},
   journal={arXiv preprint arXiv:2103.08833},
   year={2021}

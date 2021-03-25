@@ -5,9 +5,9 @@ Here we provide a step-step instruction to reproduce our results using our docke
 
 * Conv3D/pretrained.zip needs to be decompressed and put in Conv3D/ folder in our code repo. (contains pretrained RGB model using Chinese Sign Language dataset)
 * Conv3D/final_models_finetuned.zip needs to be decompressed and put in Conv3D/ folder in our code repo. (contains pretrained our final models of all modalities)
-* GCN/27_2.zip contains models trained using training set only and needs to be decompressed and put under GCN/final_models/ in our code repo.
-* GCN/27_2_finetuned.zip contains models trained using training set and validation set which needs to be decompressed and put under GCN/final_models/ in our code repo.
-* TPose/T_Pose_model_final.pth do not need decompressing and can be put under TPose/ folder directly.
+* SL-GCN/27_2.zip contains models trained using training set only and needs to be decompressed and put under SL-GCN/final_models/ in our code repo.
+* SL-GCN/27_2_finetuned.zip contains models trained using training set and validation set which needs to be decompressed and put under SL-GCN/final_models/ in our code repo.
+* SSTCN/T_Pose_model_final.pth do not need decompressing and can be put under SSTCN/ folder directly.
 ------
 ### II: Nvidia docker image:
 Our docker image can be load using the following command:
@@ -21,7 +21,7 @@ Here I provide a brief pipeline to help reproduce our results, detailed instruct
 
 #### A. For RGB track: 
 
-1. Please test GCN using the following script. All the config files in GCN/config/test and GCN/config/test_finetuned need to be tested.
+1. Please test SL-GCN using the following script. All the config files in SL-GCN/config/test and SL-GCN/config/test_finetuned need to be tested.
 ```
 python main.py --config /path/to/config/file
 ```
@@ -31,7 +31,7 @@ python main.py --config /path/to/config/file
 cd Conv3D
 python Sign_Isolated_Conv3D_clip_test.py
 python Sign_Isolated_Conv3D_flow_clip_test.py
-cd TPose
+cd SSTCN
 python test.py
 ```
 
@@ -45,7 +45,7 @@ The test results are saved as .pkl files.
 ------
 #### For RGB-D track: 
 
-1. Please test GCN using the following script. All the config files in GCN/config/test and GCN/config/test_finetuned need to be tested.
+1. Please test SL-GCN using the following script. All the config files in SL-GCN/config/test and SL-GCN/config/test_finetuned need to be tested.
 ```
 python main.py --config /path/to/config/file
 ```
@@ -57,7 +57,7 @@ python Sign_Isolated_Conv3D_clip_test.py
 python Sign_Isolated_Conv3D_flow_clip_test.py
 python Sign_Isolated_Conv3D_hha_clip_mask_test.py
 python /Sign_Isolated_Conv3D_depth_flow_clip_test.py
-cd TPose
+cd SSTCN
 python test.py
 ```
 

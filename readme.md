@@ -1,4 +1,4 @@
-[Skeleton Aware Multi-modal Sign Language Recognition](https://arxiv.org/abs/2103.08833)
+Skeleton Aware Multi-modal Sign Language Recognition
 =========
 By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/Sun1992/), [Lichen Wang](https://sites.google.com/site/lichenwang123/), [Yue Bai](https://yueb17.github.io/), [Kunpeng Li](https://kunpengli1994.github.io/) and [Yun Fu](http://www1.ece.neu.edu/~yunfu/).
 
@@ -6,11 +6,9 @@ By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/skeleton-based-sign-language-recognition/sign-language-recognition-on-autsl)](https://paperswithcode.com/sota/sign-language-recognition-on-autsl?p=skeleton-based-sign-language-recognition)
 ----
-This repo contains the official code to reproduce our results on [CVPR 2021 Challenge: Looking at People Large Scale Signer Independent Isolated Sign Language Recognition](http://chalearnlap.cvc.uab.es/challenge/43/description/).
-Our preprint paper has been uploaded to [arXiv](https://arxiv.org/abs/2103.08833). Please consider [cite](#Citation) our paper if you find this repo useful in your research.
+This repo contains the official code of [Skeleton Aware Multi-modal Sign Language Recognition (SAM-SLR)](https://arxiv.org/abs/2103.08833) that ranked 1st in [CVPR 2021 Challenge: Looking at People Large Scale Signer Independent Isolated Sign Language Recognition](http://chalearnlap.cvc.uab.es/challenge/43/description/). 
 
-In this repo, we provide trained models and a step-by-step instruction to train, test our models and reproduce our final results. We also provide a docker file for quick deployment of our environment setup. 
-
+Our preprint paper has been released on [arXiv](https://arxiv.org/abs/2103.08833). Please consider [cite](#Citation) our paper if you find this repo useful in your research.
 
 ## News
 
@@ -183,7 +181,7 @@ This project is released under the Creative Commons Zero v1.0 Universal license 
 * Published versions (changed or unchanged) must include a reference to the origin of the code.
 
 ## Citation
-If you find this project useful in your research, please cite our preprint fact sheet version:
+If you find this project useful in your research, please cite our preprint version:
 
 ```
 @article{jiang2021skeleton,
@@ -194,7 +192,7 @@ If you find this project useful in your research, please cite our preprint fact 
 }
 ```
 
-The workshop version of our paper will be updated here soon.
+Our workshop version will be updated here soon.
 
 ## Reference
 

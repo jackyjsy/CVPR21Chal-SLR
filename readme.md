@@ -10,6 +10,8 @@ This repo contains the official code of [Skeleton Aware Multi-modal Sign Languag
 
 Our preprint paper has been released on [arXiv](https://arxiv.org/abs/2103.08833). Please [cite](#Citation) our paper if you find this repo useful in your research.
 
+<img src="img/sam-slr.jpg" width = "300">
+
 ## News
 
 [2021/03/24] A preprint version of our paper is released [here](https://arxiv.org/abs/2103.08833).

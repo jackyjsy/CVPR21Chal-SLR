@@ -8,7 +8,7 @@ By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/
 ----
 This repo contains the official code of [Skeleton Aware Multi-modal Sign Language Recognition (SAM-SLR)](https://arxiv.org/abs/2103.08833) that ranked 1st in [CVPR 2021 Challenge: Looking at People Large Scale Signer Independent Isolated Sign Language Recognition](http://chalearnlap.cvc.uab.es/challenge/43/description/). 
 
-Our preprint paper has been released on [arXiv](https://arxiv.org/abs/2103.08833). Please consider [cite](#Citation) our paper if you find this repo useful in your research.
+Our preprint paper has been released on [arXiv](https://arxiv.org/abs/2103.08833). Please [cite](#Citation) our paper if you find this repo useful in your research.
 
 ## News
 

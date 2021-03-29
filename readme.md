@@ -52,13 +52,19 @@ We processed the dataset into six modalities in total: skeleton, skeleton featur
 
 1. Please put original train, val, test videos in data folder as
 
-    --data/
-
-    ----train/
-
-    ----val/
-
-    ----test/
+```
+    data
+    ├── train
+    │   ├── signer0_sample1_color.mp4
+    │   ├── signer0_sample1_depth.mp4
+    │   ├── signer0_sample2_color.mp4
+    │   ├── signer0_sample2_depth.mp4
+    │   └── ...
+    ├── val
+    │   └── ...
+    └── test
+        └── ...
+```
 
 2. Follow the [data_processs/readme.md](data_processs/readme.md) to process the data.
 

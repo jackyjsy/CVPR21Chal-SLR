@@ -5,8 +5,8 @@ By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/
 [Smile Lab @ Northeastern University](https://web.northeastern.edu/smilelab/)
 
 
-![Python 3.7](https://img.shields.io/badge/Python-3.7-green.svg)
-![Packagist](https://img.shields.io/badge/Pytorch-1.7.1-green.svg)
+![Python 3.7](https://img.shields.io/badge/Python-3.7-orange.svg)
+![Packagist](https://img.shields.io/badge/Pytorch-1.7.1-orange.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/jackyjsy/CVPR21Chal-SLR)
 [![License: CC0 4.0](https://img.shields.io/badge/License-CC0--1.0-blue.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/skeleton-based-sign-language-recognition/sign-language-recognition-on-autsl)](https://paperswithcode.com/sota/sign-language-recognition-on-autsl?p=skeleton-based-sign-language-recognition)

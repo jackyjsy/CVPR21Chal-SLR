@@ -189,7 +189,6 @@ To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble a
 
 [![licensebuttons by-nc-sa](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0)
 
-All rights reserved.
 Licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) (**Attribution-NonCommercial-ShareAlike 4.0 International**)
 
 The code is released for academic research use only. Published versions (changed or unchanged) must include a reference to the origin of the code.

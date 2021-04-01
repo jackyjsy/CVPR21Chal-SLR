@@ -4,11 +4,13 @@ By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/
 
 [Smile Lab @ Northeastern University](https://web.northeastern.edu/smilelab/)
 
-[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-blue.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
-![Python 3.7](https://img.shields.io/badge/Python-3.7-red.svg)
-![Packagist](https://img.shields.io/badge/Pytorch-1.7.1-red.svg)
+
+![Python 3.7](https://img.shields.io/badge/Python-3.7-green.svg)
+![Packagist](https://img.shields.io/badge/Pytorch-1.7.1-green.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/jackyjsy/CVPR21Chal-SLR)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-blue.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/skeleton-based-sign-language-recognition/sign-language-recognition-on-autsl)](https://paperswithcode.com/sota/sign-language-recognition-on-autsl?p=skeleton-based-sign-language-recognition)
+
 ----
 This repo contains the official code of [Skeleton Aware Multi-modal Sign Language Recognition (SAM-SLR)](https://arxiv.org/abs/2103.08833) that ranked 1st in [CVPR 2021 Challenge: Looking at People Large Scale Signer Independent Isolated Sign Language Recognition](http://chalearnlap.cvc.uab.es/challenge/43/description/). 
 
@@ -189,7 +191,7 @@ To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble a
 
 Licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) (**Attribution-NonCommercial-ShareAlike 4.0 International**)
 
-The code is released for academic research use only. Published versions (changed or unchanged) must include a reference to the origin of the code.
+The code is released for academic research use only. Commercial usage is prohibited. Published versions (changed or unchanged) must include a reference to the origin of the code.
 
 [![licensebuttons by-nc-sa](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0)
 

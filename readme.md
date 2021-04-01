@@ -8,7 +8,7 @@ By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/
 ![Python 3.7](https://img.shields.io/badge/Python-3.7-green.svg)
 ![Packagist](https://img.shields.io/badge/Pytorch-1.7.1-green.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/jackyjsy/CVPR21Chal-SLR)
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-blue.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+[![License: CC0 4.0](https://img.shields.io/badge/License-CC0--1.0-blue.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/skeleton-based-sign-language-recognition/sign-language-recognition-on-autsl)](https://paperswithcode.com/sota/sign-language-recognition-on-autsl?p=skeleton-based-sign-language-recognition)
 
 ----
@@ -189,11 +189,12 @@ To reproduce our results in CVPR21Challenge, we provide .pkl files to ensemble a
 
 ## License
 
-Licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) (**Attribution-NonCommercial-ShareAlike 4.0 International**)
+Licensed under the [Creative Commons Zero v1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) license with the following exceptions:
 
-The code is released for academic research use only. Commercial usage is prohibited. Published versions (changed or unchanged) must include a reference to the origin of the code.
+* The code is released for academic research use only. Commercial use is prohibited. 
+* Published versions (changed or unchanged) must include a reference to the origin of the code.
 
-[![licensebuttons by-nc-sa](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0)
+<!-- [![licensebuttons by-nc-sa](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0) -->
 
 ## Citation
 If you find this project useful in your research, please cite our preprint version:

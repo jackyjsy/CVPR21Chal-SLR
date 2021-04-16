@@ -20,6 +20,8 @@ Our preprint paper has been released on [arXiv](https://arxiv.org/abs/2103.08833
 
 ## News
 
+[2021/04/10] Our workshop paper has been accepted. Citation info [updated](#Citation).
+
 [2021/03/24] A preprint version of our paper is released [here](https://arxiv.org/abs/2103.08833).
 
 [2021/03/20] Our work has been verified and [announced](https://competitions.codalab.org/forums/24597/5355/) by the organizers as the 1st place winner of the challenge!
@@ -197,9 +199,16 @@ Licensed under the [Creative Commons Zero v1.0 Universal](https://creativecommon
 <!-- [![licensebuttons by-nc-sa](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0) -->
 
 ## Citation
-If you find this project useful in your research, please cite our preprint version:
+If you find this project useful in your research, please cite our paper
 
 ```
+@inproceedings{jiang2021skeleton,
+  title={Skeleton Aware Multi-modal Sign Language Recognition},
+  author={Jiang, Songyao and Sun, Bin and Wang, Lichen and Bai, Yue and Li, Kunpeng and Fu, Yun},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+  year={2021}
+}
+
 @article{jiang2021skeleton,
   title={Skeleton Aware Multi-modal Sign Language Recognition},
   author={Jiang, Songyao and Sun, Bin and Wang, Lichen and Bai, Yue and Li, Kunpeng and Fu, Yun},
@@ -207,8 +216,6 @@ If you find this project useful in your research, please cite our preprint versi
   year={2021}
 }
 ```
-
-Our workshop version will be updated here soon.
 
 ## Reference
 

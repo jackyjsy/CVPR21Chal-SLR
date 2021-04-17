@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 import os
 
-from utils.rgbd_util import *
-from utils.getCameraParam import *
-from getHHA import getHHA
+# from utils.rgbd_util import *
+# from utils.getCameraParam import *
+# from getHHA import getHHA
 def crop(image, center, radius, size=512):
     scale = 1.3
     radius_crop = (radius * scale).astype(np.int32)

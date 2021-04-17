@@ -54,9 +54,7 @@ Our paper has been accepted to [CVPR21 Workshop](http://chalearnlap.cvc.uab.es/w
 
 Download [AUTSL Dataset](http://chalearnlap.cvc.uab.es/dataset/40/description/). 
 
-We processed the dataset into six modalities in total: skeleton, skeleton features, rgb frames, flow color, hha and flow depth. Preprocessed test data of all modalities are provided to reproduce our submitted results. 
-
-[Download Processed Test Data](https://drive.google.com/drive/folders/1Skz9sbQUhciPUS4Ta76w5ZraCN5cYeuc?usp=sharing)
+We processed the dataset into six modalities in total: skeleton, skeleton features, rgb frames, flow color, hha and flow depth. 
 
 1. Please put original train, val, test videos in data folder as
 

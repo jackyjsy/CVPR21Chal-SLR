@@ -18,8 +18,9 @@ This repo contains the official code of [Skeleton Aware Multi-modal Sign Languag
 
 Our paper has been accepted to [CVPR21 Workshop](http://chalearnlap.cvc.uab.es/workshop/42/description/). A preprint version is available on [arXiv](https://arxiv.org/abs/2103.08833). Please [cite](#Citation) our paper if you find this repo useful in your research.
 
-<img src="img/sam-slr.jpg" width = "300"><br>
+<img src="img/sam-slr.jpg" width = "300"><br> 
 
+### Results
 <img src="img/AUTSL_val.jpg" width = "250">
 <img src="img/AUTSL_test.jpg" width = "250">
 

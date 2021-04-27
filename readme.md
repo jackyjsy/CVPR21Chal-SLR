@@ -14,14 +14,14 @@ By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/
 ----
 This repo contains the official code of [Skeleton Aware Multi-modal Sign Language Recognition (SAM-SLR)](https://arxiv.org/abs/2103.08833) that ranked 1st in [CVPR 2021 Challenge: Looking at People Large Scale Signer Independent Isolated Sign Language Recognition](http://chalearnlap.cvc.uab.es/challenge/43/description/). 
 
-<img src="img/challenge_result.jpg" width = "280">
+<img src="img/challenge_result.jpg" width = "300">
 
 Our paper has been accepted to [CVPR21 Workshop](http://chalearnlap.cvc.uab.es/workshop/42/description/). A preprint version is available on [arXiv](https://arxiv.org/abs/2103.08833). Please [cite](#Citation) our paper if you find this repo useful in your research.
 
 <img src="img/sam-slr.jpg" width = "300">
 <p>
-  <img src="img/AUTSL_val.jpg" width = "250">
-  <img src="img/AUTSL_test.jpg" width = "250">
+  <img src="img/AUTSL_val.jpg" width = "300">
+  <img src="img/AUTSL_test.jpg" width = "300">
 </p>
 
 

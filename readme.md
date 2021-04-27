@@ -76,6 +76,8 @@ We processed the dataset into six modalities in total: skeleton, skeleton featur
 
 3. Use TPose/data_process to extract wholebody pose features.
 
+4. Turkish and English meanings of the class IDs can be found [here](https://data.chalearnlap.cvc.uab.cat/AuTSL/data/SignList_ClassId_TR_EN.csv).
+
 
 
 ## Requirements and Docker Image

@@ -16,7 +16,7 @@ This repo contains the official code of [Skeleton Aware Multi-modal Sign Languag
 
 <img src="img/challenge_result.jpg" width = "300">
 
-[CVPR21 workshop paper](https://openaccess.thecvf.com/content/CVPR2021W/ChaLearn/papers/Jiang_Skeleton_Aware_Multi-Modal_Sign_Language_Recognition_CVPRW_2021_paper.pdf) / [arXiv preprint](https://arxiv.org/abs/2103.08833) / [YouTube](https://www.youtube.com/watch?v=S0VEYnle8SA&ab_channel=SongyaoJ)
+[CVPR21 workshop paper](https://openaccess.thecvf.com/content/CVPR2021W/ChaLearn/papers/Jiang_Skeleton_Aware_Multi-Modal_Sign_Language_Recognition_CVPRW_2021_paper.pdf) / [arXiv preprint](https://arxiv.org/abs/2103.08833) / [YouTube](https://youtu.be/4SgXxM-B4EM)
 
 Please [cite](#Citation) our paper if you find this repo useful in your research.
 
@@ -29,7 +29,7 @@ Please [cite](#Citation) our paper if you find this repo useful in your research
 
 ## News
 
-[2021/06/25] Workshop presentation is available on [YouTube](https://youtu.be/S0VEYnle8SA).
+[2021/06/25] Workshop presentation will be available on [YouTube](https://youtu.be/4SgXxM-B4EM).
 
 [2021/04/10] Our workshop paper has been accepted. Citation info [updated](#Citation).
 

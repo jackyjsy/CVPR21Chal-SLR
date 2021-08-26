@@ -24,10 +24,13 @@ Please [cite](#Citation) our paper if you find this repo useful in your research
 <p>
   <img src="img/AUTSL_val.jpg" width = "300">
   <img src="img/AUTSL_test.jpg" width = "300">
+  <img src="img/WLASL2000.jpg" width = "300">
+  <img src="img/SLR500.jpg" width = "300">
 </p>
 
-
 ## News
+
+[2021/08/26] Results on SLR500 and WLASL2000 datasets are reported.
 
 [2021/06/25] Workshop presentation will be available on [YouTube](https://youtu.be/4SgXxM-B4EM).
 

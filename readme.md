@@ -86,7 +86,7 @@ We processed the dataset into six modalities in total: skeleton, skeleton featur
         └── ...
 ```
 
-2. Follow the [data_processs/readme.md](data_processs/readme.md) to process the data.
+2. Follow the [data-prepare/readme.md](data-prepare/readme.md) to process the data.
 
 3. Use TPose/data_process to extract wholebody pose features.
 

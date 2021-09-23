@@ -30,6 +30,7 @@ Please [cite](#Citation) our paper if you find this repo useful in your research
 </p>
 
 ## News
+[2021/09/22] Processed skeleton data for AUTSL dataset is released [here](https://drive.google.com/drive/folders/1VUQsh_nf70slT4YsC-UzTCAZ3jB_uFKX?usp=sharing).
 
 [2021/08/26] Results on SLR500 and WLASL2000 datasets are reported.
 

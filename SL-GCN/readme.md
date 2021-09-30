@@ -30,15 +30,24 @@ python main.py --config config/sign/finetune/train_bone_motion.yaml
 ```
 ### Test:
 ```
-python main.py --config config/sign/finetune/test_joint.yaml
+python main.py --config config/sign/test/test_joint.yaml
 
-python main.py --config config/sign/finetune/test_bone.yaml
+python main.py --config config/sign/test/test_bone.yaml
 
-python main.py --config config/sign/finetune/test_joint_motion.yaml
+python main.py --config config/sign/test/test_joint_motion.yaml
 
-python main.py --config config/sign/finetune/test_bone_motion.yaml
+python main.py --config config/sign/test/test_bone_motion.yaml
 ```
+### Test Finetuned:
+```
+python main.py --config config/sign/test_finetuned/test_joint.yaml
 
+python main.py --config config/sign/test_finetuned/test_bone.yaml
+
+python main.py --config config/sign/test_finetuned/test_joint_motion.yaml
+
+python main.py --config config/sign/test_finetuned/test_bone_motion.yaml
+```
 ### Multi-stream ensemble:
 1. Copy the results .pkl files from all streams (joint, bone, joint motion and bone motion) to ../ensemble/gcn and renamed them correctly.
 2. Follow the instruction in ../ensemble/gcn to obtained the results of multi-stream ensemble.

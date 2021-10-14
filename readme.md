@@ -220,6 +220,7 @@ Licensed under the [Creative Commons Zero v1.0 Universal](https://creativecommon
 If you find this project useful in your research, please cite our paper
 
 ```
+% SAM-SLR
 @inproceedings{jiang2021skeleton,
   title={Skeleton Aware Multi-modal Sign Language Recognition},
   author={Jiang, Songyao and Sun, Bin and Wang, Lichen and Bai, Yue and Li, Kunpeng and Fu, Yun},
@@ -227,10 +228,11 @@ If you find this project useful in your research, please cite our paper
   year={2021}
 }
 
-@article{jiang2021skeleton,
-  title={Skeleton Aware Multi-modal Sign Language Recognition},
+% SAM-SLR-v2
+@article{jiang2021sign,
+  title={Sign Language Recognition via Skeleton-Aware Multi-Model Ensemble},
   author={Jiang, Songyao and Sun, Bin and Wang, Lichen and Bai, Yue and Li, Kunpeng and Fu, Yun},
-  journal={arXiv preprint arXiv:2103.08833},
+  journal={arXiv preprint arXiv:2110.06161},
   year={2021}
 }
 ```

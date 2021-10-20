@@ -11,8 +11,6 @@ selected_joints = {
     '59': np.concatenate((np.arange(0,17), np.arange(91,133)), axis=0), #59
     '31': np.concatenate((np.arange(0,11), [91,95,96,99,100,103,104,107,108,111],[112,116,117,120,121,124,125,128,129,132]), axis=0), #31
     '27': np.concatenate(([0,5,6,7,8,9,10], 
-                    [91,95,96,99,100,103,104,107,108,111],[112,116,117,120,121,124,125,128,129,132]), axis=0), #27
-    '27_2': np.concatenate(([0,5,6,7,8,9,10], 
                     [91,95,96,99,100,103,104,107,108,111],[112,116,117,120,121,124,125,128,129,132]), axis=0) #27
 }
 
@@ -79,10 +77,10 @@ def gendata(data_path, label_path, out_path, part='train', config='27'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sign Data Converter.')
-    parser.add_argument('--data_path', default='/data/sign/test_npy/npy3') #'train_npy/npy3', 'va_npy/npy3'
-    parser.add_argument('--label_path', default='../data/sign/27_2/test_labels_pseudo.csv') # 'train_labels.csv', 'val_gt.csv'
+    parser.add_argument('--data_path', default='/data/sign/test_npy/npy') #'train_npy/npy', 'va_npy/npy'
+    parser.add_argument('--label_path', default='../data/sign/27/train_labels.csv') # 'train_labels.csv', 'val_gt.csv', 'test_labels.csv'
     parser.add_argument('--out_folder', default='../data/sign/')
-    parser.add_argument('--points', default='27_2')
+    parser.add_argument('--points', default='27')
 
     part = 'test' # 'train', 'val'
     arg = parser.parse_args()

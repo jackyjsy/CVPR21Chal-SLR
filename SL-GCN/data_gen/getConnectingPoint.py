@@ -112,11 +112,11 @@ if __name__ == '__main__':
     print('\n',kp_model,'\n')
 
     part = "train"
-    data_path = f'../../../../../ConnectingPoints/split/{dataset}--{kp_model}-v2-Train.hdf5'
+    data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-v2-Train.hdf5'
     gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=points)
     
     print(out_path)
     part = "val"
-    data_path = f'../../../../../ConnectingPoints/split/{dataset}--{kp_model}-v2-Val.hdf5'
+    data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-v2-Val.hdf5'
     
     gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=points)

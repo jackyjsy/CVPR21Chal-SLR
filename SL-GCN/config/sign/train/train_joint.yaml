@@ -26,7 +26,7 @@ test_feeder_args:
 # 226 (num classes)
 model: model.decouple_gcn_attn.Model
 model_args:
-  num_class: 101 #53 110 # AEC=28, PUCP=36 , WLASL=101
+  num_class: 28 #53 110 # AEC=28, PUCP=36 , WLASL=101
   num_point: 71
   num_person: 1
   graph: graph.sign_27.Graph
@@ -41,7 +41,7 @@ base_lr: 0.1
 step: [150, 200]
 
 # training
-device: [1]
+device: [0, 1]
 keep_rate: 0.9
 only_train_epoch: 1
 batch_size: 64

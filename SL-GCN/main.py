@@ -593,6 +593,7 @@ class Processor():
                     group_counts  = ["{0:0.0f}".format(value) for value in confusion_matrix.flatten()]
                     confusion_matrix = np.asarray([line/np.sum(line) for line in confusion_matrix])
                     confusion_matrix = np.nan_to_num(confusion_matrix)
+
                     df_cm = pd.DataFrame(confusion_matrix * 100, index = meaning, columns=meaning)
                     #size_arr = df_cm.sum(axis = 1)
                     #maxi = max(size_arr)
@@ -758,8 +759,8 @@ if __name__ == '__main__':
                        "weight-decay": 0.0001,
                        "batch-size":32,
                        "base-lr": 0.05,
-                       "kp-model":"wholepose",
-                       "database":"WLASL"})
+                       "kp-model":"mediapipe",
+                       "database":"AEC"})
 
     config = wandb.config
 

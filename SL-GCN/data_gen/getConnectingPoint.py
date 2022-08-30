@@ -23,7 +23,7 @@ def get_wp_keys(points):
     tar = np.array(points.wb_pos)-1
     return list(tar)
 
-def read_data(path, model_key_getter):
+def read_data(path, model_key_getter, config):
     data = []
     classes = []
     videoName = []
@@ -34,7 +34,7 @@ def read_data(path, model_key_getter):
             videoName.append(f[index]['video_name'][...].item().decode('utf-8'))
             data.append(f[index]["data"][...])
 
-    points = pd.read_csv("../points.csv")
+    points = pd.read_csv(f"../points_{config}.csv")
 
     tar = model_key_getter(points)
 
@@ -43,7 +43,7 @@ def read_data(path, model_key_getter):
     meaning = {v:k for (k,v) in enumerate(sorted(set(classes)))}
 
     retrive_meaning = {k:v for (k,v) in enumerate(sorted(set(classes)))}
-    
+    print(retrive_meaning)
     labels = [meaning[label] for label in classes]
 
     return labels, videoName, data, retrive_meaning
@@ -54,7 +54,7 @@ def gendata(data_path,  out_path, model_key_getter, part='train', config='27'):
     data=[]
     sample_names = []
 
-    labels, sample_names, data , retrive_meaning = read_data(data_path, model_key_getter)
+    labels, sample_names, data , retrive_meaning = read_data(data_path, model_key_getter,config)
     fp = np.zeros((len(labels), max_frame, 71, num_channels, max_body_true), dtype=np.float32)
 
     for i, skel in enumerate(data):
@@ -94,12 +94,13 @@ def gendata(data_path,  out_path, model_key_getter, part='train', config='27'):
 
 if __name__ == '__main__':
 
-    points= '1'
+    points= '1' # just used to create folder "1" in data/sign/1/
     out_folder='../data/sign/'
     out_path = os.path.join(out_folder, points)
 
     kp_model = 'mediapipe' # openpose wholepose mediapipe
     dataset = "AEC" # WLASL PUCP_PSL_DGI156 AEC
+    numPoints = 71 # number of points used, need to be: 27 or 71
 
     model_key_getter = {'mediapipe': get_mp_keys,
                         'openpose': get_op_keys,
@@ -113,10 +114,10 @@ if __name__ == '__main__':
 
     part = "train"
     data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-Train.hdf5'
-    gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=points)
+    gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=numPoints)
     
     print(out_path)
     part = "val"
     data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-Val.hdf5'
     
-    gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=points)
+    gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=numPoints)

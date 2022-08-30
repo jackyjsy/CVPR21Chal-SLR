@@ -4,13 +4,14 @@ sys.path.extend(['../'])
 from graph import tools
 import pandas as pd
 
-points = pd.read_csv("points.csv")
+num_node = 71
+points = pd.read_csv(f"points_{num_node}.csv")
 ori = points.origin
 tar = points.tarjet
 
 inward_ori_index = [(o,t) for o, t in zip(ori, tar)]
 
-num_node = 71
+
 print("NUM OF NODES:", num_node)
 self_link = [(i, i) for i in range(num_node)]
 

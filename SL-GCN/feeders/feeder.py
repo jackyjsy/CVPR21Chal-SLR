@@ -7,10 +7,14 @@ import random
 sys.path.extend(['../'])
 from feeders import tools
 
-flip_index = np.concatenate(([0,2,1,4,3,6,5],[17,18,19,20,21,22,23,24,25,26],[7,8,9,10,11,12,13,14,15,16]), axis=0) 
+
+# 71 points
+flip_index = np.concatenate(([0,2,1,4,3,6,5,8,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50],[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70]), axis=0) 
+
+#flip_index = np.concatenate(([0,2,1,4,3,6,5,8,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50],[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70]), axis=0) 
 
 class Feeder(Dataset):
-    def __init__(self, data_path, label_path,
+    def __init__(self, data_path, label_path, meaning_path,
                  random_choose=False, random_shift=False, random_move=False,
                  window_size=-1, normalization=False, debug=False, use_mmap=True, random_mirror=False, random_mirror_p=0.5, is_vector=False):
         """
@@ -29,6 +33,7 @@ class Feeder(Dataset):
         self.debug = debug
         self.data_path = data_path
         self.label_path = label_path
+        self.meaning_path = meaning_path
         self.random_choose = random_choose
         self.random_shift = random_shift
         self.random_move = random_move
@@ -41,7 +46,6 @@ class Feeder(Dataset):
         self.is_vector = is_vector
         if normalization:
             self.get_mean_map()
-        print(len(self.label))
 
     def load_data(self):
         # data: N C V T M
@@ -63,6 +67,14 @@ class Feeder(Dataset):
             self.label = self.label[0:100]
             self.data = self.data[0:100]
             self.sample_name = self.sample_name[0:100]
+        try:
+            with open(self.meaning_path) as f:
+                    self.meaning = pickle.load(f)
+        except:
+            # for pickle file from python2
+            with open(self.meaning_path, 'rb') as f:
+                self.meaning = pickle.load(f, encoding='latin1')
+
 
     def get_mean_map(self):
         data = self.data
@@ -79,6 +91,7 @@ class Feeder(Dataset):
     def __getitem__(self, index):
         data_numpy = self.data[index]
         label = self.label[index]
+        name = self.sample_name[index]
         data_numpy = np.array(data_numpy)
 
         if self.random_choose:
@@ -86,31 +99,36 @@ class Feeder(Dataset):
             
         if self.random_mirror:
             if random.random() > self.random_mirror_p:
-                assert data_numpy.shape[2] == 27
+                #print("dabe before random mirror", data_numpy)
+                assert data_numpy.shape[2] == 71
                 data_numpy = data_numpy[:,:,flip_index,:]
                 if self.is_vector:
                     data_numpy[0,:,:,:] = - data_numpy[0,:,:,:]
                 else: 
-                    data_numpy[0,:,:,:] = 512 - data_numpy[0,:,:,:]
+                    data_numpy[0,:,:,:] = 1 - data_numpy[0,:,:,:]
+            #print("dabe after random mirror", data_numpy)
 
         if self.normalization:
             # data_numpy = (data_numpy - self.mean_map) / self.std_map
-            assert data_numpy.shape[0] == 3
+            assert data_numpy.shape[0] == 2
+            #print("dabe before norm", data_numpy)
             if self.is_vector:
                 data_numpy[0,:,0,:] = data_numpy[0,:,0,:] - data_numpy[0,:,0,0].mean(axis=0)
                 data_numpy[1,:,0,:] = data_numpy[1,:,0,:] - data_numpy[1,:,0,0].mean(axis=0)
             else:
                 data_numpy[0,:,:,:] = data_numpy[0,:,:,:] - data_numpy[0,:,0,0].mean(axis=0)
                 data_numpy[1,:,:,:] = data_numpy[1,:,:,:] - data_numpy[1,:,0,0].mean(axis=0)
-
+            #print("dabe after norm", data_numpy)
         if self.random_shift:
+            
+            #print("dabe before shift", data_numpy)
             if self.is_vector:
                 data_numpy[0,:,0,:] += random.random() * 20 - 10.0
                 data_numpy[1,:,0,:] += random.random() * 20 - 10.0
             else:
-                data_numpy[0,:,:,:] += random.random() * 20 - 10.0
-                data_numpy[1,:,:,:] += random.random() * 20 - 10.0
-
+                data_numpy[0,:,:,:] += random.random()/25 #random.random() * 20 - 10.0
+                data_numpy[1,:,:,:] += random.random()/25 #random.random() * 20 - 10.0
+            #print("dabe after shift", data_numpy)
 
         # if self.random_shift:
         #     data_numpy = tools.random_shift(data_numpy)
@@ -120,7 +138,7 @@ class Feeder(Dataset):
         if self.random_move:
             data_numpy = tools.random_move(data_numpy)
 
-        return data_numpy, label, index
+        return data_numpy, label, index, name
 
     def top_k(self, score, top_k):
         rank = score.argsort()

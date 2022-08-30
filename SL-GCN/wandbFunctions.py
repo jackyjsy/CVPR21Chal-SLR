@@ -58,4 +58,3 @@ def sendConfusionMatrix(ground_truth, predictions, class_names, cmTrain=True):
             preds=predictions,
             class_names=class_names,
             title="TEST_conf_mat")})
-            

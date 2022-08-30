@@ -98,8 +98,8 @@ if __name__ == '__main__':
     out_folder='../data/sign/'
     out_path = os.path.join(out_folder, points)
 
-    kp_model = 'wholepose' # openpose wholepose mediapipe
-    dataset = "WLASL" # WLASL PUCP_PSL_DGI156 AEC
+    kp_model = 'mediapipe' # openpose wholepose mediapipe
+    dataset = "AEC" # WLASL PUCP_PSL_DGI156 AEC
 
     model_key_getter = {'mediapipe': get_mp_keys,
                         'openpose': get_op_keys,
@@ -112,11 +112,11 @@ if __name__ == '__main__':
     print('\n',kp_model,'\n')
 
     part = "train"
-    data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-v2-Train.hdf5'
+    data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-Train.hdf5'
     gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=points)
     
     print(out_path)
     part = "val"
-    data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-v2-Val.hdf5'
+    data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-Val.hdf5'
     
     gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=points)

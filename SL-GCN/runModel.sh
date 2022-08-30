@@ -1,0 +1,1 @@
+python main.py --config config/sign/train/train_joint.yaml

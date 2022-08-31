@@ -16,6 +16,8 @@
 python main.py --config config/sign/train/train_joint.yaml
 ```
 
+Note: if you don't have a wandb account, you need to set "wandbFlag" variable of "main.py" to False and modify the code to have reports 
+
 ---------------------------
 ## Data preparation
 1. Extract whole-body keypoints data following the instruction in ../data_process/wholepose

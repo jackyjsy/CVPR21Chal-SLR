@@ -26,8 +26,8 @@ test_feeder_args:
 # 226 (num classes)
 model: model.decouple_gcn_attn.Model
 model_args:
-  num_class: 28 #53 110 # AEC=28, PUCP=36 , WLASL=101
-  num_point: 71
+  num_class: 28 # AEC=28, PUCP=36 , WLASL=101
+  num_point: 29 # 29 or 71
   num_person: 1
   graph: graph.sign_27.Graph
   groups: 16

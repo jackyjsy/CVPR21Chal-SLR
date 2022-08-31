@@ -4,7 +4,7 @@ sys.path.extend(['../'])
 from graph import tools
 import pandas as pd
 
-num_node = 71
+num_node = 29 # 29 or 71
 points = pd.read_csv(f"points_{num_node}.csv")
 ori = points.origin
 tar = points.tarjet

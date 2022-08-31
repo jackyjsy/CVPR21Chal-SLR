@@ -28,6 +28,9 @@ import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 import wandbFunctions as wandbF
 import wandb
+
+wandbFlag = True
+
 # class LabelSmoothingCrossEntropy(nn.Module):
 #     def __init__(self):
 #         super(LabelSmoothingCrossEntropy, self).__init__()
@@ -40,7 +43,6 @@ import wandb
 #         loss = confidence * nll_loss + smoothing * smooth_loss
 #         return loss.mean()
 
-wandbFlag = True
 
 model_name = ''
 
@@ -315,14 +317,15 @@ class Processor():
 
                 params += [{'params': value, 'lr': self.arg.base_lr, 'lr_mult': lr_mult,
                             'decay_mult': decay_mult, 'weight_decay': weight_decay}]
-            wandb.config = {
-                "learning_rate": self.arg.base_lr,
-                "epochs": self.arg.num_epoch,
-                "batch_size": self.arg.batch_size,
-                "weight_decay":self.arg.weight_decay,
-                "num_class":self.arg.model_args["num_class"],
-                "momentum":0.9
-            }
+            if wandbFlag:
+                wandb.config = {
+                    "learning_rate": self.arg.base_lr,
+                    "epochs": self.arg.num_epoch,
+                    "batch_size": self.arg.batch_size,
+                    "weight_decay":self.arg.weight_decay,
+                    "num_class":self.arg.model_args["num_class"],
+                    "momentum":0.9
+                }
             self.optimizer = optim.SGD(
                 params,
                 momentum=0.9,
@@ -332,13 +335,15 @@ class Processor():
                 self.model.parameters(),
                 lr=self.arg.base_lr,
                 weight_decay=self.arg.weight_decay)
-            wandb.config = {
-                "learning_rate": self.arg.base_lr,
-                "epochs": self.arg.num_epoch,
-                "batch_size": self.arg.batch_size,
-                "weight_decay":self.arg.weight_decay,
-                "num_class":self.arg.model_args["num_class"]
-            }
+
+            if wandbFlag:
+                wandb.config = {
+                    "learning_rate": self.arg.base_lr,
+                    "epochs": self.arg.num_epoch,
+                    "batch_size": self.arg.batch_size,
+                    "weight_decay":self.arg.weight_decay,
+                    "num_class":self.arg.model_args["num_class"]
+                }
         else:
             raise ValueError()
 
@@ -487,15 +492,15 @@ class Processor():
             self.best_tmp_acc = accuracy
 
         if epoch+1 == arg.num_epoch:
- 
-            wandb.log({"TRAIN_conf_mat" : wandb.plot.confusion_matrix(
-                        #probs=score,
-                        #y_true=list(label.values()),
-                        #preds=list(predict_label.values()),
-                        y_true=list(target_arr),
-                        preds=list(predict_arr),
-                        class_names=meaning,
-                        title="TRAIN_conf_mat")})
+            if wandbFlag:
+                wandb.log({"TRAIN_conf_mat" : wandb.plot.confusion_matrix(
+                            #probs=score,
+                            #y_true=list(label.values()),
+                            #preds=list(predict_label.values()),
+                            y_true=list(target_arr),
+                            preds=list(predict_arr),
+                            class_names=meaning,
+                            title="TRAIN_conf_mat")})
 
         if wandbFlag:
             wandbF.wandbTrainLog(np.mean(loss_value), accuracy)
@@ -607,7 +612,9 @@ class Processor():
                     plt.xlabel('Predicted label' )
                     
                     plt.close(fig_)
-                    wandb.log({"Confusion matrix": wandb.Image(fig_, caption="VAL_conf_mat")})
+
+                    if wandbFlag:
+                        wandb.log({"Confusion matrix": wandb.Image(fig_, caption="VAL_conf_mat")})
 
                     with open('./work_dir/' + arg.Experiment_name + '/eval_results/'+ model_name+ '/best_acc' + '.pkl'.format(
                             epoch, accuracy), 'wb') as f:
@@ -622,12 +629,12 @@ class Processor():
                 
                 if epoch + 1 == arg.num_epoch:
 
-
-                    wandb.log({"roc" : wandb.plot.roc_curve( list(trueLabels.values()), score, \
-                            labels=meaning, classes_to_plot=None)})
-            
-                    wandb.log({"pr" : wandb.plot.pr_curve(list(trueLabels.values()), score,
-                            labels=meaning, classes_to_plot=None)})
+                    if wandbFlag:
+                        wandb.log({"roc" : wandb.plot.roc_curve( list(trueLabels.values()), score, \
+                                labels=meaning, classes_to_plot=None)})
+                
+                        wandb.log({"pr" : wandb.plot.pr_curve(list(trueLabels.values()), score,
+                                labels=meaning, classes_to_plot=None)})
 
                     #wandb.log({"val_sklearn_conf_mat": wandb.sklearn.plot_confusion_matrix(, 
                     #        , meaning_3)})
@@ -753,16 +760,25 @@ def import_class(name):
 if __name__ == '__main__':
     parser = get_parser()
 
-    wandb.init(project="Connecting-points", 
-               entity="joenatan30",
-               config={"num-epoch": 500,
-                       "weight-decay": 0.0001,
-                       "batch-size":32,
-                       "base-lr": 0.05,
-                       "kp-model":"mediapipe",
-                       "database":"AEC"})
+    config = {
+            #
+            "num-epoch": 500,
+            "weight-decay": 0.0001,
+            "batch-size":32,
+            "base-lr": 0.05,
+            "kp-model":"mediapipe",
+            "database":"AEC",
+            
+            # This parameter is only used for wandb reports - not for the model
+            "num_points": 29     
+    }
 
-    config = wandb.config
+    if wandbFlag:
+        wandb.init(project="Connecting-points", 
+                entity="joenatan30",
+                config=config)
+
+        config = wandb.config
 
     # load arg form config file
     p = parser.parse_args()
@@ -791,8 +807,9 @@ if __name__ == '__main__':
     runAndModelName =  arg.kp_model + '-' + arg.database + "-LrnRate" + str(arg.base_lr)+ "-NClases" + str(arg.model_args["num_class"]) + "-Batch" + str(arg.batch_size)
 
     model_name = runAndModelName
-    wandb.run.name = runAndModelName
-    wandb.run.save()
+    if wandbFlag:
+        wandb.run.name = runAndModelName
+        wandb.run.save()
 
     init_seed(0)
     processor = Processor(arg)

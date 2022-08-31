@@ -1,0 +1,27 @@
+command:
+  - ${env}
+  - python
+  - ${program}
+  - --config
+  - config/sign/train/train_joint.yaml
+  - ${args}
+method: grid
+name: MergeData-Seed-42
+parameters:
+  base-lr:
+    values:
+      - 7
+      - 1.7
+      - 0.7
+      - 0.07
+  batch-size:
+    values:
+      - 32
+      - 16
+  num-epoch:
+    values:
+      - 250
+  weight-decay:
+    values:
+      - 1e-05
+program: main.py

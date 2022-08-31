@@ -1,6 +1,6 @@
 # Skeleton Based Sign Language Recognition
 
-## To use with Connecting Points
+## To use with [Connecting Points](https://github.com/JoeNatan30/ConnectingPoints) repository
 
 ### Generate smile-lab data split (from the split of connecting points) and Smile-lab model variable preparation to train
 1. Run "getConnectingPoint.py" in data_gen folder (Not forget to modify "kpModel", "numPoints" and "dataset" variable)

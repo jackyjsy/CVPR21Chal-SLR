@@ -99,8 +99,8 @@ if __name__ == '__main__':
     out_folder='../data/sign/'
     out_path = os.path.join(out_folder, folderName)
 
-    kp_model = 'mediapipe' # openpose wholepose mediapipe
-    dataset = "AEC" # WLASL PUCP_PSL_DGI156 AEC
+    kp_model = 'wholepose' # openpose wholepose mediapipe
+    dataset = "WLASL" # WLASL PUCP_PSL_DGI156 AEC
     numPoints = 29 # number of points used, need to be: 29 or 71
 
     model_key_getter = {'mediapipe': get_mp_keys,
@@ -111,7 +111,7 @@ if __name__ == '__main__':
         os.makedirs(out_path)
 
 
-    print('\n',kp_model,'\n')
+    print('\n',kp_model, dataset,'\n')
 
     part = "train"
     print(out_path,'->', part)

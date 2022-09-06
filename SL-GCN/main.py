@@ -432,9 +432,11 @@ class Processor():
                 if 'DecoupleA' in key:
                     value.requires_grad = False
                     print(key + '-not require grad')
+
         meaning = list(self.meaning.values())
         
         for batch_idx, (data, label, index, name) in enumerate(process):
+
             self.global_step += 1
 
             label_tmp = label.cpu().numpy()
@@ -450,6 +452,7 @@ class Processor():
                 keep_prob = -(1 - self.arg.keep_rate) / 100 * epoch + 1.0
             else:
                 keep_prob = self.arg.keep_rate
+
             output = self.model(data, keep_prob)
 
             if isinstance(output, tuple):
@@ -770,7 +773,7 @@ if __name__ == '__main__':
             "database":"AEC",
             
             # This parameter is only used for wandb reports - not for the model
-            "num_points": 29     
+            "num_points": 29
     }
 
     if wandbFlag:
@@ -801,7 +804,7 @@ if __name__ == '__main__':
     arg.kp_model = config["kp-model"]
     arg.database = config["database"]
 
-    arg.file_name =  "./save_models/"+ arg.Experiment_name + arg.model_saved_name + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"])
+    arg.file_name = f"./save_models/{arg.Experiment_name}{arg.model_saved_name}-{arg.kp_model}-{arg.database}-Lr{str(arg.base_lr)}-NClasses{str(arg.model_args['num_class'])}-{str(config['num_points'])}"
     os.makedirs(arg.file_name,exist_ok=True)
 
     runAndModelName =  arg.kp_model + '-' + arg.database + "-LrnRate" + str(arg.base_lr)+ "-NClases" + str(arg.model_args["num_class"]) + "-Batch" + str(arg.batch_size)

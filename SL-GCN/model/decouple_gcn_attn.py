@@ -230,6 +230,7 @@ class Model(nn.Module):
         else:
             Graph = import_class(graph)
             self.graph = Graph(**graph_args)
+            self.graph.num_node = num_point
 
         A = self.graph.A
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)

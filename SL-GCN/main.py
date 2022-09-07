@@ -28,6 +28,8 @@ import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 import wandbFunctions as wandbF
 import wandb
+import time
+from data_gen.getConnectingPoint import *
 
 wandbFlag = True
 
@@ -45,6 +47,32 @@ wandbFlag = True
 
 
 model_name = ''
+def create_one_folder(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        
+def create_folder(directory):
+    path = directory.split('/')
+    total_path =''
+    for i in path:
+        total_path = os.path.join(total_path,i)
+        print(i, '  create : ',total_path)
+        create_one_folder(total_path)
+    
+    print('directory : ',directory)
+    create_one_folder(directory)
+    create_one_folder(directory+'/')
+
+    create_one_folder(directory)
+    create_one_folder(directory+'/ga')
+    time.sleep(2)
+
+    create_one_folder(directory)
+    create_one_folder(directory+'/ga')
+
+    time.sleep(5)
+
+    print('created paths')
 
 def init_seed(_):
     torch.cuda.manual_seed_all(1)
@@ -58,144 +86,66 @@ def init_seed(_):
 
 def get_parser():
     # parameter priority: command line > config > default
-    parser = argparse.ArgumentParser(
-        description='Decoupling Graph Convolution Network with DropGraph Module')
-    parser.add_argument(
-        '--work-dir',
-        default='./work_dir/temp',
-        help='the work folder for storing results')
+    parser = argparse.ArgumentParser(description='Decoupling Graph Convolution Network with DropGraph Module')
+    parser.add_argument('--work-dir',default='./work_dir/temp',help='the work folder for storing results')
 
-    parser.add_argument('-model_saved_name', default='')
-    parser.add_argument('-Experiment_name', default='')
-    parser.add_argument(
-        '--config',
-        default='./config/nturgbd-cross-view/test_bone.yaml',
-        help='path to the configuration file')
+    parser.add_argument('-model_saved_directory', default='')
+    parser.add_argument('-experiment_name', default='')
+    parser.add_argument('--config',default='./config/nturgbd-cross-view/test_bone.yaml',help='path to the configuration file')
 
     # processor
-    parser.add_argument(
-        '--phase', default='train', help='must be train or test')
-    parser.add_argument(
-        '--save-score',
-        type=str2bool,
-        default=False,
-        help='if ture, the classification score will be stored')
+    parser.add_argument('--phase', default='train', help='must be train or test')
+    parser.add_argument('--save-score',type=str2bool,default=False,help='if ture, the classification score will be stored')
 
     # visulize and debug
-    parser.add_argument(
-        '--seed', type=int, default=1, help='random seed for pytorch')
-    parser.add_argument(
-        '--log-interval',
-        type=int,
-        default=100,
-        help='the interval for printing messages (#iteration)')
-    parser.add_argument(
-        '--save-interval',
-        type=int,
-        default=2,
-        help='the interval for storing models (#iteration)')
-    parser.add_argument(
-        '--eval-interval',
-        type=int,
-        default=5,
-        help='the interval for evaluating models (#iteration)')
-    parser.add_argument(
-        '--print-log',
-        type=str2bool,
-        default=True,
-        help='print logging or not')
-    parser.add_argument(
-        '--show-topk',
-        type=int,
-        default=[1, 5],
-        nargs='+',
-        help='which Top K accuracy will be shown')
+    parser.add_argument('--seed', type=int, default=1, help='random seed for pytorch')
+    parser.add_argument('--log-interval',type=int,default=100,help='the interval for printing messages (#iteration)')
+    parser.add_argument('--save-interval',type=int,default=2,help='the interval for storing models (#iteration)')
+    parser.add_argument('--eval-interval',type=int,default=5,help='the interval for evaluating models (#iteration)')
+    parser.add_argument('--print-log',type=str2bool,default=True,help='print logging or not')
+    parser.add_argument('--show-topk',type=int,default=[1, 5],nargs='+',help='which Top K accuracy will be shown')
 
     # feeder
-    parser.add_argument(
-        '--feeder', default='feeder.feeder', help='data loader will be used')
-    parser.add_argument(
-        '--num-worker',
-        type=int,
-        default=32,
-        help='the number of worker for data loader')
-    parser.add_argument(
-        '--train-feeder-args',
-        default=dict(),
-        help='the arguments of data loader for training')
-    parser.add_argument(
-        '--test-feeder-args',
-        default=dict(),
-        help='the arguments of data loader for test')
+    parser.add_argument('--feeder', default='feeder.feeder', help='data loader will be used')
+    parser.add_argument('--num-worker',type=int,default=32,help='the number of worker for data loader')
+    parser.add_argument('--train-feeder-args',default=dict(),help='the arguments of data loader for training')
+    parser.add_argument('--test-feeder-args',default=dict(),help='the arguments of data loader for test')
 
     # model
     parser.add_argument('--model', default=None, help='the model will be used')
-    parser.add_argument(
-        '--model-args',
-        type=dict,
-        default=dict(),
-        help='the arguments of model')
-    parser.add_argument(
-        '--weights',
-        default=None,
-        help='the weights for network initialization')
-    parser.add_argument(
-        '--ignore-weights',
-        type=str,
-        default=[],
-        nargs='+',
-        help='the name of weights which will be ignored in the initialization')
+    parser.add_argument('--model-args',type=dict,default=dict(),help='the arguments of model')
+    parser.add_argument('--weights',default=None,help='the weights for network initialization')
+    parser.add_argument('--ignore-weights',type=str,default=[],nargs='+',help='the name of weights which will be ignored in the initialization')
 
     # optim
-    parser.add_argument(
-        '--base-lr', type=float, default=0.01, help='initial learning rate')
-    parser.add_argument(
-        '--step',
-        type=int,
-        default=[20, 40, 60],
-        nargs='+',
-        help='the epoch where optimizer reduce the learning rate')
-    parser.add_argument(
-        '--device',
-        type=int,
-        default=0,
-        nargs='+',
-        help='the indexes of GPUs for training or testing')
+    parser.add_argument('--base_lr', type=float, default=0.05, help='initial learning rate')
+    parser.add_argument('--num_epoch',type=int,default=500,help='stop training in which epoch')
+    
+    parser.add_argument('--step',type=int,default=[20, 40, 60],nargs='+',help='the epoch where optimizer reduce the learning rate')
+    parser.add_argument('--device',type=int,default=0,nargs='+',help='the indexes of GPUs for training or testing')
     parser.add_argument('--optimizer', default='SGD', help='type of optimizer')
-    parser.add_argument(
-        '--nesterov', type=str2bool, default=False, help='use nesterov or not')
-    parser.add_argument(
-        '--batch-size', type=int, default=256, help='training batch size')
-    parser.add_argument(
-        '--test-batch-size', type=int, default=256, help='test batch size')
-    parser.add_argument(
-        '--start-epoch',
-        type=int,
-        default=0,
-        help='start training from which epoch')
-    parser.add_argument(
-        '--num-epoch',
-        type=int,
-        default=80,
-        help='stop training in which epoch')
-    parser.add_argument(
-        '--weight-decay',
-        type=float,
-        default=0.0005,
-        help='weight decay for optimizer')
-    parser.add_argument(
-        '--keep_rate',
-        type=float,
-        default=0.9,
-        help='keep probability for drop')
-    parser.add_argument(
-        '--groups',
-        type=int,
-        default=8,
-        help='decouple groups')
+    parser.add_argument('--nesterov', type=str2bool, default=False, help='use nesterov or not')
+    parser.add_argument('--batch-size', type=int, default=32, help='training batch size')
+    parser.add_argument('--test-batch-size', type=int, default=256, help='test batch size')
+    parser.add_argument('--start-epoch',type=int,default=0,help='start training from which epoch')
+    parser.add_argument('--weight-decay',type=float,default=0.0001,help='weight decay for optimizer')
+    parser.add_argument('--keep_rate',type=float,default=0.9,help='keep probability for drop')
+    parser.add_argument('--groups',type=int,default=8,help='decouple groups')
     parser.add_argument('--only_train_part', default=True)
     parser.add_argument('--only_train_epoch', default=0)
     parser.add_argument('--warm_up_epoch', default=0)
+    
+    # Data
+    
+    parser.add_argument("--experiment_name", type=str, default="", help="Path to the training dataset CSV file")
+    parser.add_argument("--training_set_path", type=str, default="", help="Path to the training dataset CSV file")
+    parser.add_argument("--keypoints_model", type=str, default="openpose", help="Path to the training dataset CSV file")
+    parser.add_argument("--keypoints_number", type=int, default=29, help="Path to the training dataset CSV file")
+    parser.add_argument("--testing_set_path", type=str, default="", help="Path to the testing dataset CSV file")
+    parser.add_argument("--num_class", type=int, default="", help="Path to the testing dataset CSV file")
+    parser.add_argument("--database", type=str, default="", help="Path to the testing dataset CSV file")
+    parser.add_argument("--mode_train", type=str, default="train", help="Path to the testing dataset CSV file")
+
     return parser
 
 
@@ -206,22 +156,26 @@ class Processor():
 
     def __init__(self, arg):
 
-        arg.model_saved_name = arg.file_name + '/' + arg.Experiment_name
-        arg.work_dir = "./work_dir/" + arg.Experiment_name
+
         self.arg = arg
         self.save_arg()
+        self.connectingPoints(arg)
+
+
         if arg.phase == 'train':
+            pass
+            '''
             if not arg.train_feeder_args['debug']:
-                if os.path.isdir(arg.model_saved_name):
-                    print('log_dir: ', arg.model_saved_name, 'already exist')
-                    answer = input('delete it? y/n:')
+                if os.path.isdir(arg.model_saved_directory):
+                    print('log_dir: ', arg.model_saved_directory, 'already exist')
+                    answer = 'y'#input('delete it? y/n:')
                     if answer == 'y':
-                        shutil.rmtree(arg.model_saved_name)
-                        print('Dir removed: ', arg.model_saved_name)
-                        input(
-                            'Refresh the website of tensorboard by pressing any keys')
+                        shutil.rmtree(arg.model_saved_directory)
+                        print('Dir removed: ', arg.model_saved_directory)
+                        #input('Refresh the website of tensorboard by pressing any keys')
                     else:
-                        print('Dir not removed: ', arg.model_saved_name)
+                        print('Dir not removed: ', arg.model_saved_directory)
+            '''
 
         self.global_step = 0
         self.load_model()
@@ -230,6 +184,37 @@ class Processor():
         self.lr = self.arg.base_lr
         self.best_acc = 0
         self.best_tmp_acc = 0
+
+
+    def connectingPoints(self,arg):
+        print('Creating points .. ')
+
+        folderName= '1' # just used to create folder "1" in data/sign/1/
+        out_folder='data/sign/'
+        out_path = os.path.join(out_folder, folderName)
+
+        kp_model = arg.kp_model# 'wholepose' # openpose wholepose mediapipe
+        dataset = arg.experiment_name# "PUCP" # WLASL PUCP_PSL_DGI156 AEC
+        numPoints = arg.keypoints_number # number of points used, need to be: 29 or 71
+        data_path_train = arg.training_set_path #f'../../../../joe/ConnectingPoints/split/WLASL--wholepose-Train.hdf5'
+        data_path_test = arg.testing_set_path#f'../../../../joe/ConnectingPoints/split/WLASL--wholepose-Val.hdf5'
+            
+
+        model_key_getter = {'mediapipe': get_mp_keys,
+                            'openpose': get_op_keys,
+                            'wholepose': get_wp_keys}
+
+        if not os.path.exists(out_path):
+            os.makedirs(out_path)
+
+        print('kp_model',kp_model)
+        print('\n',kp_model, dataset,'\n')
+        print(out_path,'->', 'train')
+        gendata(data_path_train, out_path, model_key_getter[kp_model], part='train', config=numPoints)
+        print(out_path,'->', 'val')
+        gendata(data_path_test, out_path, model_key_getter[kp_model], part='val', config=numPoints)
+        print('Creating points completed!!! ')
+
 
     def load_data(self):
         Feeder = import_class(self.arg.feeder)
@@ -257,7 +242,14 @@ class Processor():
         output_device =  self.arg.device[0] if type(
              self.arg.device) is list else self.arg.device
         self.output_device =  output_device
+        
+        print('^'*20)
+        print('self.arg.model',self.arg.model)
+        print('model_args',self.arg.model_args)
+
         Model = import_class(self.arg.model)
+
+
         shutil.copy2(inspect.getfile(Model), self.arg.work_dir)
         self.model = Model(**self.arg.model_args).cuda(output_device)
         # print(self.model)
@@ -579,7 +571,7 @@ class Processor():
                                         str(x) + ',' + str(true[i]) + '\n')
                 score = np.concatenate(score_frag)
 
-                if 'UCLA' in arg.Experiment_name:
+                if 'UCLA' in arg.experiment_name:
                     self.data_loader[ln].dataset.sample_name = np.arange(
                         len(score))
 
@@ -593,13 +585,34 @@ class Processor():
                         zip(self.data_loader[ln].dataset.sample_name, score))
 
                     conf_mat = torchmetrics.ConfusionMatrix(num_classes=self.arg.model_args["num_class"])
+                    '''
+                    print('self.arg.model_args["num_class"]',self.arg.model_args["num_class"])
+                    
+                    print('list(submission.values())',list(submission.values()))
+                    print('set(list(submission.values()))',set(list(submission.values())))
+                    print('len(set(list(submission.values())))',len(set(list(submission.values()))))
+
+                    print('list(trueLabels.values())',list(trueLabels.values()))
+                    print('set(list(trueLabels.values()))',set(list(trueLabels.values())))
+                    print('len(set(list(trueLabels.values())))',len(set(list(trueLabels.values()))))
+                    '''
                     confusion_matrix = conf_mat(torch.tensor(list(submission.values())).cpu(), torch.tensor(list(trueLabels.values())).cpu())
                     confusion_matrix = confusion_matrix.detach().cpu().numpy()
                     
                     plt.figure(figsize = (10,7))
         
                     group_counts  = ["{0:0.0f}".format(value) for value in confusion_matrix.flatten()]
-                    confusion_matrix = np.asarray([line/np.sum(line) for line in confusion_matrix])
+                    '''
+                    print('confusion_matrix')
+                    print(confusion_matrix)
+                    print('len confusion_matrix')
+
+                    print(len(confusion_matrix))
+                    for line in confusion_matrix:
+                        print('line',line)
+                        print(len(line))
+                    '''
+                    confusion_matrix = np.asarray([line/(np.sum(line)+0.0001) for line in confusion_matrix])
                     confusion_matrix = np.nan_to_num(confusion_matrix)
 
                     df_cm = pd.DataFrame(confusion_matrix * 100, index = meaning, columns=meaning)
@@ -619,7 +632,15 @@ class Processor():
                     if wandbFlag:
                         wandb.log({"Confusion matrix": wandb.Image(fig_, caption="VAL_conf_mat")})
 
-                    with open('./work_dir/' + arg.Experiment_name + '/eval_results/'+ model_name+ '/best_acc' + '.pkl'.format(
+                    
+                    print('*'*20)
+                    print('*'*20)
+                    print('*'*20)
+
+                    print('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name+ '/best_acc' + '.pkl')
+
+
+                    with open('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name+ '/best_acc' + '.pkl'.format(
                             epoch, accuracy), 'wb') as f:
                         pickle.dump(score_dict, f)
 
@@ -627,7 +648,13 @@ class Processor():
                     state_dict = self.model.state_dict()
                     weights = OrderedDict([[k.split('module.')[-1],
                                         v.cpu()] for k, v in state_dict.items()])
-                    torch.save(weights, self.arg.model_saved_name + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
+
+                    print('*'*20)
+                    print('*'*20)
+                    print('*'*20)
+                    print(self.arg.model_saved_directory)
+                    print(self.arg.model_saved_directory + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
+                    torch.save(weights, self.arg.model_saved_directory + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
 
                 
                 if epoch + 1 == arg.num_epoch:
@@ -651,7 +678,7 @@ class Processor():
                     '''
 
                 print('Eval Accuracy: ', accuracy,
-                    ' model: ', self.arg.model_saved_name)
+                    ' model: ', self.arg.model_saved_directory)
                 if wandbFlag:
                     wandbF.wandbValLog(np.mean(loss_value), accuracy, top5)
 
@@ -663,7 +690,7 @@ class Processor():
                     self.print_log('\tTop{}: {:.2f}%'.format(
                         k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
                 '''
-                with open('./work_dir/' + arg.Experiment_name + '/eval_results/epoch_' + str(epoch) + '_' + str(accuracy) + '.pkl'.format(
+                with open('./work_dir/' + arg.experiment_name + '/eval_results/epoch_' + str(epoch) + '_' + str(accuracy) + '.pkl'.format(
                         epoch, accuracy), 'wb') as f:
                     pickle.dump(score_dict, f)
                 '''
@@ -725,12 +752,12 @@ class Processor():
                 # self.lr_scheduler.step(val_loss)
 
             print('best accuracy: ', self.best_acc,
-                  ' model_name: ', self.arg.model_saved_name)
+                  ' model_name: ', self.arg.model_saved_directory)
 
         elif self.arg.phase == 'test':
             if not self.arg.test_feeder_args['debug']:
-                wf = self.arg.model_saved_name + '_wrong.txt'
-                rf = self.arg.model_saved_name + '_right.txt'
+                wf = self.arg.model_saved_directory + '_wrong.txt'
+                rf = self.arg.model_saved_directory + '_right.txt'
             else:
                 wf = rf = None
             if self.arg.weights is None:
@@ -762,41 +789,63 @@ def import_class(name):
 
 if __name__ == '__main__':
     parser = get_parser()
+ 
+   # load arg form config file
+    arg = parser.parse_args()
 
-    config = {
-            #
-            "num-epoch": 500,
-            "weight-decay": 0.0001,
-            "batch-size":32,
-            "base-lr": 0.05,
-            "kp-model":"mediapipe",
-            "database":"AEC",
-            
-            # This parameter is only used for wandb reports - not for the model
-            "num_points": 29
-    }
 
-    if wandbFlag:
-        wandb.init(project="Connecting-points", 
-                entity="joenatan30",
-                config=config)
-
-        config = wandb.config
-
-    # load arg form config file
-    p = parser.parse_args()
-    if p.config is not None:
-        with open(p.config, 'r') as f:
+    print('arg.config',arg.config)
+    if arg.config is not None:
+        with open(arg.config, 'r') as f:
             #default_arg = yaml.load(f)
             default_arg = yaml.safe_load(f)
-        key = vars(p).keys()
+            print('default_arg',default_arg)
+        key = vars(arg).keys()
         for k in default_arg.keys():
             if k not in key:
                 print('WRONG ARG: {}'.format(k))
                 assert (k in key)
         parser.set_defaults(**default_arg)
         
+   # load arg form config file
     arg = parser.parse_args()
+
+    arg.model_args['num_class'] =arg.num_class
+    arg.model_args['num_point'] =arg.keypoints_number
+
+    arg.model_args['graph_args']['num_node'] =arg.keypoints_number
+
+  #num_class: 28 # AEC=28, PUCP=36 , WLASL=101
+  #num_point: 29 # 29 or 71
+
+    # arg.training_set_path
+    # arg.keypoints_model
+    # arg.keypoints_number
+    # arg.testing_set_path
+    # arg.experiment_name
+    # arg.base_lr
+    # arg.num_epoch
+
+    
+    config = {
+            #
+            "num-epoch": arg.num_epoch,
+            "weight-decay": arg.weight_decay,
+            "batch-size":arg.batch_size,
+            "base-lr":  arg.base_lr,
+            "kp-model": arg.keypoints_model,
+            "num_points": arg.keypoints_number,
+            "database": arg.database,
+            "mode_train":arg.mode_train,
+    }
+
+    if wandbFlag:
+        wandb.init(project="sign_language_project", 
+                entity="ml_projects",
+                config=config)
+
+        config = wandb.config
+
     arg.base_lr = config["base-lr"]
     arg.batch_size = config["batch-size"]
     arg.weight_decay = config["weight-decay"]
@@ -804,16 +853,35 @@ if __name__ == '__main__':
     arg.kp_model = config["kp-model"]
     arg.database = config["database"]
 
-    arg.file_name = f"./save_models/{arg.Experiment_name}{arg.model_saved_name}-{arg.kp_model}-{arg.database}-Lr{str(arg.base_lr)}-NClasses{str(arg.model_args['num_class'])}-{str(config['num_points'])}"
-    os.makedirs(arg.file_name,exist_ok=True)
+    arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"
+    arg.work_dir              = "work_dir/"+arg.experiment_name+"/"
 
-    runAndModelName =  arg.kp_model + '-' + arg.database + "-LrnRate" + str(arg.base_lr)+ "-NClases" + str(arg.model_args["num_class"]) + "-Batch" + str(arg.batch_size)
+    print('*'*20)
+    print('*'*20)
+
+    print('model_saved_directory',arg.model_saved_directory)
+    print('work_dir',arg.work_dir)
+
+
+    create_folder(arg.model_saved_directory)
+    create_folder(arg.work_dir)
+    create_folder('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name+ '/')
+
+    # {arg.model_saved_directory}-{arg.kp_model}-{arg.database}-Lr{str(arg.base_lr)}-NClasses{str(arg.num_class)}-{str(config['num_points'])}
+    #os.makedirs(arg.file_name,exist_ok=True)
+
+    runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-LrnRate" + str(arg.base_lr)+ "-NClases" + str(arg.num_class) + "-Batch" + str(arg.batch_size)
 
     model_name = runAndModelName
+    print('model_name : ',model_name)
     if wandbFlag:
         wandb.run.name = runAndModelName
         wandb.run.save()
 
     init_seed(0)
+
+    print(arg)
+    print(arg.train_feeder_args)
+    print('train_feeder_args',arg.train_feeder_args)
     processor = Processor(arg)
     processor.start()

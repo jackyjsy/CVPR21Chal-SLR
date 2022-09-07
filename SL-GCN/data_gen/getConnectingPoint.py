@@ -29,15 +29,33 @@ def read_data(path, model_key_getter, config):
     classes = []
     videoName = []
 
+    if  'AEC' in  path:
+        list_labels_banned = ["ya", "qué?", "qué", "bien", "dos", "ahí", "luego", "yo", "él", "tú","???","NNN"]
+
+    if  'PUCP' in  path:
+        list_labels_banned = ["ya", "qué?", "qué", "bien", "dos", "ahí", "luego", "yo", "él", "tú","???","NNN"]
+        list_labels_banned += ["sí","ella","uno","ese","ah","dijo","llamar"]
+
+    if  'WLASL' in  path:
+        list_labels_banned = ['apple','computer','fish','kiss','later','no','orange','pizza','purple','secretary','shirt','sunday','take','water','yellow']
+
+
     with h5py.File(path, "r") as f:
         for index in f.keys():
-            classes.append(f[index]['label'][...].item().decode('utf-8'))
+            label = f[index]['label'][...].item().decode('utf-8')
+
+            if str(label) in list_labels_banned:
+                continue
+                
+            classes.append(label)
             videoName.append(f[index]['video_name'][...].item().decode('utf-8'))
             data.append(f[index]["data"][...])
-
-    points = pd.read_csv(f"../points_{config}.csv")
+    
+    print('config : ',config)
+    points = pd.read_csv(f"points_{config}.csv")
 
     tar = model_key_getter(points)
+    print('tart',tar)
 
     data = [d[:,:,tar] for d in data]
 
@@ -46,6 +64,9 @@ def read_data(path, model_key_getter, config):
     retrive_meaning = {k:v for (k,v) in enumerate(sorted(set(classes)))}
 
     labels = [meaning[label] for label in classes]
+
+    print('meaning',meaning)
+    print('retrive_meaning',retrive_meaning)
 
     return labels, videoName, data, retrive_meaning
     
@@ -115,7 +136,7 @@ if __name__ == '__main__':
 
     part = "train"
     print(out_path,'->', part)
-    data_path = f'../../../ConnectingPoints/split/{dataset}--{kp_model}-Train.hdf5'
+    data_path = f'../../../../joe/ConnectingPoints/split/{dataset}--{kp_model}-Train.hdf5'
     gendata(data_path, out_path, model_key_getter[kp_model], part=part, config=numPoints)
     
 

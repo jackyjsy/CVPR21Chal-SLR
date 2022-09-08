@@ -4,16 +4,7 @@ sys.path.extend(['../'])
 from graph import tools
 import pandas as pd
 
-num_node = 29 # 29 or 71
-points = pd.read_csv(f"points_{num_node}.csv")
-ori = points.origin
-tar = points.tarjet
 
-inward_ori_index = [(o,t) for o, t in zip(ori, tar)]
-
-
-print("NUM OF NODES:", num_node)
-self_link = [(i, i) for i in range(num_node)]
 
 '''
 inward_ori_index = [(5, 6), (5, 7),
@@ -43,25 +34,35 @@ inward_ori_index = [(1, 2), (1, 3), (2, 4), (4, 6), (3, 5), (5, 7),
                     ]
 '''
 
-inward = [(i - 1, j - 1) for (i, j) in inward_ori_index]
-outward = [(j, i) for (i, j) in inward]
-neighbor = inward + outward
 
 
 class Graph:
-    def __init__(self, labeling_mode='spatial'):
-        self.A = self.get_adjacency_matrix(labeling_mode)
+    def __init__(self, labeling_mode='spatial',num_node=29):
         self.num_node = num_node
-        self.self_link = self_link
-        self.inward = inward
-        self.outward = outward
-        self.neighbor = neighbor
+        #num_node = 29 # 29 or 71
+        points = pd.read_csv(f"points_{self.num_node}.csv")
+        ori = points.origin
+        tar = points.tarjet
+
+        self.inward_ori_index = [(o,t) for o, t in zip(ori, tar)]
+
+
+        self.self_link = [(i, i) for i in range(self.num_node)]
+
+        self.inward = [(i - 1, j - 1) for (i, j) in self.inward_ori_index]
+        self.outward = [(j, i) for (i, j) in self.inward]
+        self.neighbor = self.inward + self.outward
+
+        print("NUM OF NODES:", self.num_node)
+
+
+        self.A = self.get_adjacency_matrix(labeling_mode)
 
     def get_adjacency_matrix(self, labeling_mode=None):
         if labeling_mode is None:
             return self.A
         if labeling_mode == 'spatial':
-            A = tools.get_spatial_graph(num_node, self_link, inward, outward)
+            A = tools.get_spatial_graph(self.num_node, self.self_link, self.inward, self.outward)
         else:
             raise ValueError()
         return A

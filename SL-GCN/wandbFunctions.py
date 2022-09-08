@@ -7,12 +7,12 @@ Created on Tue Jun  8 20:34:41 2021
 """
 import wandb
 
-
+'''
 def initConfigWandb(num_layers, num_classes, batch_size, 
                     nEpoch, lrn_rate, hidden_size, dropout,
                     weight_decay, epsilon):
 
-    wandb.init(project="smileLab-PSL", entity="joenatan30")
+    wandb.init(project="sign_language_project", entity="ml_projects")
     run = wandb.init()
 
     config = wandb.config
@@ -26,6 +26,7 @@ def initConfigWandb(num_layers, num_classes, batch_size,
     config.dropout = dropout
     config["weight_decay"] = weight_decay
     config["epsilon"] = epsilon
+'''
 
 def wandbTrainLog(trainLoss, TrainAcc):
     wandb.log({"Train loss": trainLoss,

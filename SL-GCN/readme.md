@@ -3,7 +3,7 @@
 ## To use with [Connecting Points](https://github.com/JoeNatan30/ConnectingPoints) repository
 
 ### Generate smile-lab data split (from the split of connecting points) and Smile-lab model variable preparation to train
-1. Run "getConnectingPoint.py" in data_gen folder (Not forget to modify "kpModel", "numPoints" and "dataset" variable)
+1. Run "data_gen/getConnectingPoint.py" in data_gen folder (Not forget to modify "kpModel", "numPoints" and "dataset" variable)
 
 2. Modify "num_point", "num_class" and "device" variable of the yaml file "/config/sign/train/train_joint.yaml" as it is needed (same as setted in the previous step)
 

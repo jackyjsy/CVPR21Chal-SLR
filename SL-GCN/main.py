@@ -185,6 +185,9 @@ class Processor():
         self.best_acc = 0
         self.best_tmp_acc = 0
 
+        self.maxTestAcc = 0
+        self.relative_maxtop5 = 0
+
 
     def connectingPoints(self,arg):
         print('Creating points .. ')
@@ -680,7 +683,14 @@ class Processor():
                 print('Eval Accuracy: ', accuracy,
                     ' model: ', self.arg.model_saved_directory)
                 if wandbFlag:
-                    wandbF.wandbValLog(np.mean(loss_value), accuracy, top5)
+
+                    self.maxTestAcc = max(accuracy,self.maxTestAcc)
+                    
+                    if self.maxTestAcc == accuracy:
+
+                        self.relative_maxtop5 = top5
+
+                    wandbF.wandbValLog(np.mean(loss_value), accuracy, top5,self.maxTestAcc,self.relative_maxtop5)
 
                 score_dict = dict(
                     zip(self.data_loader[ln].dataset.sample_name, score))

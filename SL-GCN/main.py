@@ -74,11 +74,11 @@ def create_folder(directory):
 
     print('created paths')
 
-def init_seed(_):
-    torch.cuda.manual_seed_all(1)
-    torch.manual_seed(1)
-    np.random.seed(1)
-    random.seed(1)
+def init_seed(value_seed):
+    torch.cuda.manual_seed_all(value_seed)
+    torch.manual_seed(value_seed)
+    np.random.seed(value_seed)
+    random.seed(value_seed)
     #torch.backends.cudnn.enabled = False
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
@@ -847,6 +847,7 @@ if __name__ == '__main__':
             "num_points": arg.keypoints_number,
             "database": arg.database,
             "mode_train":arg.mode_train,
+            "seed":arg.seed
     }
 
     if wandbFlag:
@@ -880,7 +881,7 @@ if __name__ == '__main__':
     # {arg.model_saved_directory}-{arg.kp_model}-{arg.database}-Lr{str(arg.base_lr)}-NClasses{str(arg.num_class)}-{str(config['num_points'])}
     #os.makedirs(arg.file_name,exist_ok=True)
 
-    runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-LrnRate" + str(arg.base_lr)+ "-NClases" + str(arg.num_class) + "-Batch" + str(arg.batch_size)
+    runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-Lr" + str(arg.base_lr)+ "-NClas" + str(arg.num_class) + "-Batch" + str(arg.batch_size)+"-Seed"+str(arg.seed)
 
     model_name = runAndModelName
     print('model_name : ',model_name)
@@ -888,7 +889,8 @@ if __name__ == '__main__':
         wandb.run.name = runAndModelName
         wandb.run.save()
 
-    init_seed(0)
+    print('seed :',arg.seed)
+    init_seed(arg.seed)
 
     print(arg)
     print(arg.train_feeder_args)

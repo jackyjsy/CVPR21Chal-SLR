@@ -62,16 +62,6 @@ def create_folder(directory):
     print('directory : ',directory)
     create_one_folder(directory)
     create_one_folder(directory+'/')
-
-    create_one_folder(directory)
-    create_one_folder(directory+'/ga')
-    time.sleep(2)
-
-    create_one_folder(directory)
-    create_one_folder(directory+'/ga')
-
-    time.sleep(5)
-
     print('created paths')
 
 def init_seed(value_seed):
@@ -91,7 +81,7 @@ def get_parser():
 
     parser.add_argument('-model_saved_directory', default='')
     parser.add_argument('-experiment_name', default='')
-    parser.add_argument('--config',default='./config/nturgbd-cross-view/test_bone.yaml',help='path to the configuration file')
+    parser.add_argument('--config',default='config/sign/train/train_joint.yaml',help='path to the configuration file')
 
     # processor
     parser.add_argument('--phase', default='train', help='must be train or test')
@@ -142,7 +132,7 @@ def get_parser():
     parser.add_argument("--keypoints_model", type=str, default="openpose", help="Path to the training dataset CSV file")
     parser.add_argument("--keypoints_number", type=int, default=29, help="Path to the training dataset CSV file")
     parser.add_argument("--testing_set_path", type=str, default="", help="Path to the testing dataset CSV file")
-    parser.add_argument("--num_class", type=int, default="", help="Path to the testing dataset CSV file")
+    parser.add_argument("--num_class", type=int, default=0, help="Path to the testing dataset CSV file")
     parser.add_argument("--database", type=str, default="", help="Path to the testing dataset CSV file")
     parser.add_argument("--mode_train", type=str, default="train", help="Path to the testing dataset CSV file")
 
@@ -804,6 +794,7 @@ if __name__ == '__main__':
     arg = parser.parse_args()
 
 
+
     print('arg.config',arg.config)
     if arg.config is not None:
         with open(arg.config, 'r') as f:
@@ -819,6 +810,21 @@ if __name__ == '__main__':
         
    # load arg form config file
     arg = parser.parse_args()
+
+    arg.training_set_path = '../../../dataset_original/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
+    arg.testing_set_path  = '../../../dataset_original/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
+
+    if arg.database == 'AEC':
+        arg.num_class  = 28 
+
+    if arg.database == 'WLASL':
+
+        arg.num_class  = 86 
+            
+    if arg.database == 'PUCP':
+        arg.num_class  = 29 
+        arg.training_set_path = '../../../dataset_original/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
+        arg.testing_set_path  = '../../../dataset_original/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
 
     arg.model_args['num_class'] =arg.num_class
     arg.model_args['num_point'] =arg.keypoints_number
@@ -892,7 +898,12 @@ if __name__ == '__main__':
     print('seed :',arg.seed)
     init_seed(arg.seed)
 
+
+    print("*"*30)
+    print("*"*30)
     print(arg)
+    print("*"*30)
+    print("*"*30)
     print(arg.train_feeder_args)
     print('train_feeder_args',arg.train_feeder_args)
     processor = Processor(arg)

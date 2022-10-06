@@ -2,10 +2,7 @@
 
 ## To use with [Connecting Points](https://github.com/JoeNatan30/ConnectingPoints) repository
 
-### 
-
-1. run
-```
+ ```
 bash runModel.sh
 
 ```

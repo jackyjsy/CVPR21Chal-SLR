@@ -28,9 +28,11 @@ def initConfigWandb(num_layers, num_classes, batch_size,
     config["epsilon"] = epsilon
 '''
 
-def wandbTrainLog(trainLoss, TrainAcc):
+def wandbTrainLog(trainLoss, TrainAcc,p1,p2):
     wandb.log({"Train loss": trainLoss,
-               "Train accuracy": TrainAcc
+               "Train accuracy": TrainAcc,
+               "m_params":p1,
+               "trainable_m_params":p2
                })
 
 def wandbValLog(testLoss, TestAcc, top5,maxTestAcc,relative_maxtop5):

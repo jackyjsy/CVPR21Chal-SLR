@@ -253,6 +253,11 @@ class Processor():
         self.print_log(path_model_init)
         torch.save(self.model.state_dict(), path_model_init)
         self.print_log('%'*20)
+        
+        self.m_params = sum(p.numel() for p in self.model.parameters())
+        self.trainable_m_params= sum(p.numel() for p in self.model.parameters() if p.requires_grad)
+
+
 
         # self.loss = LabelSmoothingCrossEntropy().cuda(output_device)
 
@@ -599,7 +604,7 @@ class Processor():
             if mean_loss>10:
                 mean_loss = 10
 
-            wandbF.wandbTrainLog(mean_loss, accuracy)
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params)
         # statistics of time consumption and loss
         proportion = {
             k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))

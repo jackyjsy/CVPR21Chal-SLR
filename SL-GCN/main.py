@@ -492,7 +492,7 @@ class Processor():
             mean_loss = np.mean(loss_value)
             if mean_loss>10:
                 mean_loss = 10
-            wandbF.wandbTrainLog(mean_loss, accuracy)
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params)
         # statistics of time consumption and loss
         proportion = {
             k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))

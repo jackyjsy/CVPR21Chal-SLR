@@ -985,10 +985,15 @@ if __name__ == '__main__':
                 "seed":arg.seed,
                 "id_iteration":id_iteration,
         }
+        import wandb
+        import os
+
+        os.environ["WANDB_API_KEY"] = "15f7c99e787e3f99da09963b0cfb45b73656845f"
 
         if wandbFlag:
             wandb.init(project="sign_language_project", 
                     entity="ml_projects",
+                    reinit=True,
                     config=config)
 
             config = wandb.config

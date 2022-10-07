@@ -2,9 +2,7 @@
 from __future__ import print_function
 import argparse
 import os
-from termios import VMIN
 import time
-from xml.dom import minicompat
 import numpy as np
 import yaml
 import pickle
@@ -17,15 +15,13 @@ import torch.optim as optim
 from torch.autograd import Variable
 from tqdm import tqdm
 import shutil
-from torch.optim.lr_scheduler import ReduceLROnPlateau, MultiStepLR
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import random
 import inspect
 import torchmetrics
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-import torch.backends.cudnn as cudnn
-import torch.nn.functional as F
 import wandbFunctions as wandbF
 import wandb
 import time
@@ -944,8 +940,8 @@ if __name__ == '__main__':
         # load arg form config file
         arg = parser.parse_args()
 
-        arg.training_set_path = '../../../dataset_original/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
-        arg.testing_set_path  = '../../../dataset_original/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
+        arg.training_set_path = '../../../'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
+        arg.testing_set_path  = '../../../'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
 
         if arg.database == 'AEC':
             arg.num_class  = 28 
@@ -956,8 +952,8 @@ if __name__ == '__main__':
                 
         if arg.database == 'PUCP':
             arg.num_class  = 29 
-            arg.training_set_path = '../../../dataset_original/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
-            arg.testing_set_path  = '../../../dataset_original/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
+            arg.training_set_path = '../../../PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
+            arg.testing_set_path  = '../../../PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
 
         arg.model_args['num_class'] =arg.num_class
         arg.model_args['num_point'] =arg.keypoints_number

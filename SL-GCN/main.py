@@ -2,9 +2,7 @@
 from __future__ import print_function
 import argparse
 import os
-from termios import VMIN
 import time
-from xml.dom import minicompat
 import numpy as np
 import yaml
 import pickle
@@ -17,15 +15,13 @@ import torch.optim as optim
 from torch.autograd import Variable
 from tqdm import tqdm
 import shutil
-from torch.optim.lr_scheduler import ReduceLROnPlateau, MultiStepLR
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import random
 import inspect
 import torchmetrics
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-import torch.backends.cudnn as cudnn
-import torch.nn.functional as F
 import wandbFunctions as wandbF
 import wandb
 import time
@@ -56,29 +52,19 @@ def create_folder(directory):
     total_path =''
     for i in path:
         total_path = os.path.join(total_path,i)
-        print(i, '  create : ',total_path)
+        #print(i, '  create : ',total_path)
         create_one_folder(total_path)
     
-    print('directory : ',directory)
+    #print('directory : ',directory)
     create_one_folder(directory)
     create_one_folder(directory+'/')
+    #print('created paths')
 
-    create_one_folder(directory)
-    create_one_folder(directory+'/ga')
-    time.sleep(2)
-
-    create_one_folder(directory)
-    create_one_folder(directory+'/ga')
-
-    time.sleep(5)
-
-    print('created paths')
-
-def init_seed(_):
-    torch.cuda.manual_seed_all(1)
-    torch.manual_seed(1)
-    np.random.seed(1)
-    random.seed(1)
+def init_seed(value_seed):
+    torch.cuda.manual_seed_all(value_seed)
+    torch.manual_seed(value_seed)
+    np.random.seed(value_seed)
+    random.seed(value_seed)
     #torch.backends.cudnn.enabled = False
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
@@ -91,7 +77,7 @@ def get_parser():
 
     parser.add_argument('-model_saved_directory', default='')
     parser.add_argument('-experiment_name', default='')
-    parser.add_argument('--config',default='./config/nturgbd-cross-view/test_bone.yaml',help='path to the configuration file')
+    parser.add_argument('--config',default='config/sign/train/train_joint.yaml',help='path to the configuration file')
 
     # processor
     parser.add_argument('--phase', default='train', help='must be train or test')
@@ -142,7 +128,7 @@ def get_parser():
     parser.add_argument("--keypoints_model", type=str, default="openpose", help="Path to the training dataset CSV file")
     parser.add_argument("--keypoints_number", type=int, default=29, help="Path to the training dataset CSV file")
     parser.add_argument("--testing_set_path", type=str, default="", help="Path to the testing dataset CSV file")
-    parser.add_argument("--num_class", type=int, default="", help="Path to the testing dataset CSV file")
+    parser.add_argument("--num_class", type=int, default=0, help="Path to the testing dataset CSV file")
     parser.add_argument("--database", type=str, default="", help="Path to the testing dataset CSV file")
     parser.add_argument("--mode_train", type=str, default="train", help="Path to the testing dataset CSV file")
 
@@ -223,6 +209,7 @@ class Processor():
         Feeder = import_class(self.arg.feeder)
         ln = Feeder(**self.arg.test_feeder_args)
         self.meaning = ln.meaning
+        pd.DataFrame(list(self.meaning.values())).to_csv('./work_dir/' + self.arg.experiment_name + '/eval_results/'+ model_name+ '/'+'labels_used.csv',header=None)
         #print(ln.meaning)
         self.data_loader = dict()
         if self.arg.phase == 'train':
@@ -259,15 +246,33 @@ class Processor():
         if wandbFlag:
             wandbF.watch(self.model)
         self.loss = nn.CrossEntropyLoss().cuda(output_device)
+
+        path_model_init =  os.path.join(arg.model_saved_directory,arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-"+str(arg.seed)+"-init.pt")
+
+        self.print_log('%'*20)
+        self.print_log('path_model_init :')
+        self.print_log(path_model_init)
+        torch.save(self.model.state_dict(), path_model_init)
+        self.print_log('%'*20)
+        
+        self.m_params = sum(p.numel() for p in self.model.parameters())
+        self.trainable_m_params= sum(p.numel() for p in self.model.parameters() if p.requires_grad)
+
+
+
         # self.loss = LabelSmoothingCrossEntropy().cuda(output_device)
 
+
+        #self.slrt_model_wp.load_state_dict(self.slrt_model_op.state_dict())
+        
         if self.arg.weights:
             self.print_log('Load weights from {}.'.format(self.arg.weights))
             if '.pkl' in self.arg.weights:
                 with open(self.arg.weights, 'r') as f:
-                    weights = pickle.load(f)
+                    weights = pickle.load(f)  
             else:
-                weights = torch.load(self.arg.weights)
+                weights = torch.load(self.arg.weights)  
+                self.print_log("weights readed!")
 
             weights = OrderedDict(
                 [[k.split('module.')[-1],
@@ -280,7 +285,10 @@ class Processor():
                     self.print_log('Can Not Remove Weights: {}.'.format(w))
 
             try:
+                self.print_log("load state dict weights")
                 self.model.load_state_dict(weights)
+                self.print_log("load state dict weights completed!")
+
             except:
                 state = self.model.state_dict()
                 diff = list(set(state.keys()).difference(set(weights.keys())))
@@ -400,6 +408,98 @@ class Processor():
         self.record_time()
         return split_time
 
+    def train_zero(self, epoch, save_model=False): 
+        self.model.train(False)
+        loader = self.data_loader['train']
+        loss_value = []
+        predict_arr = []
+        proba_arr = []
+        target_arr = []
+
+        self.record_time()
+
+        timer = dict(dataloader=0.001, model=0.001, statistics=0.001)
+        process = tqdm(loader)
+        meaning = list(self.meaning.values())
+        
+        for batch_idx, (data, label, index, name) in enumerate(process):
+
+            self.global_step += 1
+
+            label_tmp = label.cpu().numpy()
+            # get data
+            data = Variable(data.float().cuda(self.output_device), requires_grad=False)
+            label = Variable(label.long().cuda(self.output_device), requires_grad=False)
+            timer['dataloader'] += self.split_time()
+
+            # forward
+            if epoch < 100:
+                keep_prob = -(1 - self.arg.keep_rate) / 100 * epoch + 1.0
+            else:
+                keep_prob = self.arg.keep_rate
+
+            output = self.model(data, keep_prob)
+
+            if isinstance(output, tuple):
+                output, l1 = output
+                l1 = l1.mean()
+            else:
+                l1 = 0
+
+            #print('output',output)
+            #print('label',label)
+            loss = self.loss(output, label)
+            #print('loss',loss)
+            #for r,s in zip(name,label_tmp):
+            #    meaning[s]= '_'.join(r.split('_')[:-1])
+
+            loss_value.append(loss.data.cpu().numpy())
+            timer['model'] += self.split_time()
+
+            value, predict_label = torch.max(output.data, 1)
+
+            predict_arr.append(predict_label.cpu().numpy())
+            target_arr.append(label.data.cpu().numpy())
+            proba_arr.append(output.data.cpu().numpy())
+
+            acc = torch.mean((predict_label == label.data).float())
+
+
+            if self.global_step % self.arg.log_interval == 0:
+                self.print_log(
+                    '\tBatch({}/{}) done. Loss: {:.4f}  lr:{:.6f}'.format(
+                        batch_idx, len(loader), loss.data, self.lr))
+            timer['statistics'] += self.split_time()
+        
+        predict_arr = np.concatenate(predict_arr)
+        target_arr = np.concatenate(target_arr)
+        proba_arr = np.concatenate(proba_arr)
+        accuracy  = torch.mean((predict_label == label.data).float())
+        if accuracy >= self.best_tmp_acc:
+            self.best_tmp_acc = accuracy
+
+        if epoch+1 == arg.num_epoch:
+            if wandbFlag:
+                wandb.log({"TRAIN_conf_mat" : wandb.plot.confusion_matrix(
+                            #probs=score,
+                            #y_true=list(label.values()),
+                            #preds=list(predict_label.values()),
+                            y_true=list(target_arr),
+                            preds=list(predict_arr),
+                            class_names=meaning,
+                            title="TRAIN_conf_mat")})
+
+        if wandbFlag:
+            mean_loss = np.mean(loss_value)
+            if mean_loss>10:
+                mean_loss = 10
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params)
+        # statistics of time consumption and loss
+        proportion = {
+            k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))
+            for k, v in timer.items()
+        }
+            
 
     def train(self, epoch, save_model=False): 
         self.model.train()
@@ -501,7 +601,11 @@ class Processor():
                             title="TRAIN_conf_mat")})
 
         if wandbFlag:
-            wandbF.wandbTrainLog(np.mean(loss_value), accuracy)
+            mean_loss = np.mean(loss_value)
+            if mean_loss>10:
+                mean_loss = 10
+
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params)
         # statistics of time consumption and loss
         proportion = {
             k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))
@@ -514,9 +618,11 @@ class Processor():
             f_w = open(wrong_file, 'w')
         if result_file is not None:
             f_r = open(result_file, 'w')
-        #if isTest:
+        
+        # variables to use to save the results in csv
         submission = dict()
         trueLabels = dict()
+        saveLabels = dict()
         
         meaning = list(self.meaning.values())
         self.model.eval()
@@ -550,7 +656,10 @@ class Processor():
                     else:
                         l1 = 0
 
+                    #print('val output',output)
+                    #print('val label',label)
                     loss = self.loss(output, label)
+                    #print('val loss',loss)
                     score_frag.append(output.data.cpu().numpy())
                     loss_value.append(loss.data.cpu().numpy())
 
@@ -558,8 +667,10 @@ class Processor():
 
                     #if isTest:
                     for j in range(output.size(0)):
+
                         submission[name[j]] = predict_label[j].item()
                         trueLabels[name[j]] = label_tmp[j].item()
+                        saveLabels[name[j]] = self.meaning[label_tmp[j].item()]
 
                     step += 1
 
@@ -659,16 +770,40 @@ class Processor():
                     print(self.arg.model_saved_directory + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
                     torch.save(weights, self.arg.model_saved_directory + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
 
-                
+                    predLabels = []
+                    groundLabels = []
+                    totalRows = 0
+                    with open('./work_dir/' + self.arg.experiment_name + '/eval_results/'+ model_name+ '/'+'submission.csv', 'w',) as of:
+                        writer = csv.writer(of)
+                        accum = 0
+                        for trueName, truePred in trueLabels.items():
+
+                            sample = trueName
+                            #print(f'Predicting {sample}', end=' ')
+                            #print(f'as {submission[sample]} - pred {submission[sample]} and real {row[1]}')
+                            match=0
+                            predLabels.append(submission[sample])
+                            groundLabels.append(int(truePred))
+                            if int(truePred) == int(submission[sample]):
+                                match=1
+                                accum+=1
+                            totalRows+=1
+
+                            writer.writerow([sample, saveLabels[sample], submission[sample], str(truePred), str(match)])
+
+
+
                 if epoch + 1 == arg.num_epoch:
 
                     if wandbFlag:
-                        wandb.log({"roc" : wandb.plot.roc_curve( list(trueLabels.values()), score, \
-                                labels=meaning, classes_to_plot=None)})
-                
-                        wandb.log({"pr" : wandb.plot.pr_curve(list(trueLabels.values()), score,
-                                labels=meaning, classes_to_plot=None)})
-
+                        try:
+                            wandb.log({"roc" : wandb.plot.roc_curve( list(trueLabels.values()), score, \
+                                    labels=meaning, classes_to_plot=None)})
+                    
+                            wandb.log({"pr" : wandb.plot.pr_curve(list(trueLabels.values()), score,
+                                    labels=meaning, classes_to_plot=None)})
+                        except:
+                            pass
                     #wandb.log({"val_sklearn_conf_mat": wandb.sklearn.plot_confusion_matrix(, 
                     #        , meaning_3)})
                     '''
@@ -683,6 +818,9 @@ class Processor():
                 print('Eval Accuracy: ', accuracy,
                     ' model: ', self.arg.model_saved_directory)
                 if wandbFlag:
+                    mean_loss = np.mean(loss_value)
+                    if mean_loss>10:
+                        mean_loss = 10
 
                     self.maxTestAcc = max(accuracy,self.maxTestAcc)
                     
@@ -690,7 +828,7 @@ class Processor():
 
                         self.relative_maxtop5 = top5
 
-                    wandbF.wandbValLog(np.mean(loss_value), accuracy, top5,self.maxTestAcc,self.relative_maxtop5)
+                    wandbF.wandbValLog(mean_loss, accuracy, top5,self.maxTestAcc,self.relative_maxtop5)
 
                 score_dict = dict(
                     zip(self.data_loader[ln].dataset.sample_name, score))
@@ -704,41 +842,7 @@ class Processor():
                         epoch, accuracy), 'wb') as f:
                     pickle.dump(score_dict, f)
                 '''
-
-        
-        predLabels = []
-        groundLabels = []
         print("END")
-        if isTest:
-            #print(submission)
-            #print(trueLabels)
-            totalRows = 0
-            with open("submission.csv", 'w') as of:
-                writer = csv.writer(of)
-                accum = 0
-                for trueName, truePred in trueLabels.items():
-
-                    sample = trueName
-                    #print(f'Predicting {sample}', end=' ')
-                    #print(f'as {submission[sample]} - pred {submission[sample]} and real {row[1]}')
-                    match=0
-                    predLabels.append(submission[sample])
-                    groundLabels.append(int(truePred))
-                    if int(truePred) == int(submission[sample]):
-                        match=1
-                        accum+=1
-                    totalRows+=1
-                    
-                    # identifying subject
-                    with open("pucpSubject.csv") as subjectFile:
-                        readerSubject = csv.reader(subjectFile)
-                        idx = int(sample.split('_')[-1])
-                        subjectName = 'NA'
-                        for name, idxStart, idxEnd in readerSubject:
-                            if (int(idxStart) <= idx) and (idx<= int(idxEnd)):
-                                subjectName = name
-                                break
-                    writer.writerow([sample, submission[sample], str(truePred), str(match), subjectName])
 
         return np.mean(loss_value)
 
@@ -748,7 +852,14 @@ class Processor():
             self.print_log('Parameters:\n{}\n'.format(str(vars(self.arg))))
             self.global_step = self.arg.start_epoch * \
                 len(self.data_loader['train']) / self.arg.batch_size
+
+            self.model.train(False)
+            self.train_zero(0, save_model=False)
+            val_loss = self.eval(0,save_score=self.arg.save_score,loader_name=['test'])
+            self.model.train(True)
+
             for epoch in range(self.arg.start_epoch, self.arg.num_epoch):
+
                 save_model = ((epoch + 1) % self.arg.save_interval == 0) or (
                     epoch + 1 == self.arg.num_epoch)
 
@@ -798,100 +909,142 @@ def import_class(name):
 
 
 if __name__ == '__main__':
-    parser = get_parser()
- 
-   # load arg form config file
-    arg = parser.parse_args()
-
-
-    print('arg.config',arg.config)
-    if arg.config is not None:
-        with open(arg.config, 'r') as f:
-            #default_arg = yaml.load(f)
-            default_arg = yaml.safe_load(f)
-            print('default_arg',default_arg)
-        key = vars(arg).keys()
-        for k in default_arg.keys():
-            if k not in key:
-                print('WRONG ARG: {}'.format(k))
-                assert (k in key)
-        parser.set_defaults(**default_arg)
-        
-   # load arg form config file
-    arg = parser.parse_args()
-
-    arg.model_args['num_class'] =arg.num_class
-    arg.model_args['num_point'] =arg.keypoints_number
-
-    arg.model_args['graph_args']['num_node'] =arg.keypoints_number
-
-  #num_class: 28 # AEC=28, PUCP=36 , WLASL=101
-  #num_point: 29 # 29 or 71
-
-    # arg.training_set_path
-    # arg.keypoints_model
-    # arg.keypoints_number
-    # arg.testing_set_path
-    # arg.experiment_name
-    # arg.base_lr
-    # arg.num_epoch
-
     
-    config = {
-            #
-            "num-epoch": arg.num_epoch,
-            "weight-decay": arg.weight_decay,
-            "batch-size":arg.batch_size,
-            "base-lr":  arg.base_lr,
-            "kp-model": arg.keypoints_model,
-            "num_points": arg.keypoints_number,
-            "database": arg.database,
-            "mode_train":arg.mode_train,
-    }
 
-    if wandbFlag:
-        wandb.init(project="sign_language_project", 
-                entity="ml_projects",
-                config=config)
+    parser = get_parser()
+    arg = parser.parse_args()
+    print('seed :',arg.seed)
+    init_seed(arg.seed)
 
-        config = wandb.config
+    for id_iteration in range(1):
 
-    arg.base_lr = config["base-lr"]
-    arg.batch_size = config["batch-size"]
-    arg.weight_decay = config["weight-decay"]
-    arg.num_epoch = config["num-epoch"]
-    arg.kp_model = config["kp-model"]
-    arg.database = config["database"]
-
-    arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"
-    arg.work_dir              = "work_dir/"+arg.experiment_name+"/"
-
-    print('*'*20)
-    print('*'*20)
-
-    print('model_saved_directory',arg.model_saved_directory)
-    print('work_dir',arg.work_dir)
+        # load arg form config file
 
 
-    create_folder(arg.model_saved_directory)
-    create_folder(arg.work_dir)
-    create_folder('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name+ '/')
 
-    # {arg.model_saved_directory}-{arg.kp_model}-{arg.database}-Lr{str(arg.base_lr)}-NClasses{str(arg.num_class)}-{str(config['num_points'])}
-    #os.makedirs(arg.file_name,exist_ok=True)
+        print('arg.config',arg.config)
+        if arg.config is not None:
+            with open(arg.config, 'r') as f:
+                #default_arg = yaml.load(f)
+                default_arg = yaml.safe_load(f)
+                print('default_arg',default_arg)
+            key = vars(arg).keys()
+            for k in default_arg.keys():
+                if k not in key:
+                    print('WRONG ARG: {}'.format(k))
+                    assert (k in key)
+            parser.set_defaults(**default_arg)
+            
+        # load arg form config file
+        arg = parser.parse_args()
 
-    runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-LrnRate" + str(arg.base_lr)+ "-NClases" + str(arg.num_class) + "-Batch" + str(arg.batch_size)
+        arg.training_set_path = '../../ConnectingPoints/split/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
+        arg.testing_set_path  = '../../ConnectingPoints/split/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
 
-    model_name = runAndModelName
-    print('model_name : ',model_name)
-    if wandbFlag:
-        wandb.run.name = runAndModelName
-        wandb.run.save()
+        if arg.database == 'AEC':
+            arg.num_class  = 28 
 
-    init_seed(0)
+        if arg.database == 'WLASL':
+            arg.num_class  = 86 
+                
+        if arg.database == 'PUCP':
+            arg.num_class  = 29 
+            arg.training_set_path = '../../../PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
+            arg.testing_set_path  = '../../../PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
 
-    print(arg)
-    print(arg.train_feeder_args)
-    print('train_feeder_args',arg.train_feeder_args)
-    processor = Processor(arg)
-    processor.start()
+        if arg.database == 'AEC-DGI156-DGI305':
+            arg.num_class  = 72 
+
+        arg.model_args['num_class'] =arg.num_class
+        arg.model_args['num_point'] =arg.keypoints_number
+
+        arg.model_args['graph_args']['num_node'] =arg.keypoints_number
+
+        #num_class: 28 # AEC=28, PUCP=36 , WLASL=101
+        #num_point: 29 # 29 or 71
+
+        # arg.training_set_path
+        # arg.keypoints_model
+        # arg.keypoints_number
+        # arg.testing_set_path
+        # arg.experiment_name
+        # arg.base_lr
+        # arg.num_epoch
+
+        
+        config = {
+                #
+                "num-epoch": arg.num_epoch,
+                "weight-decay": arg.weight_decay,
+                "batch-size":arg.batch_size,
+                "base-lr":  arg.base_lr,
+                "kp-model": arg.keypoints_model,
+                "num_points": arg.keypoints_number,
+                "database": arg.database,
+                "mode_train":arg.mode_train,
+                "seed":arg.seed,
+                "id_iteration":id_iteration,
+        }
+        import wandb
+        import os
+
+        os.environ["WANDB_API_KEY"] = ""
+
+        if wandbFlag:
+            wandb.init(project="", 
+                    entity="",
+                    tags=["to_compare","complete_data"],
+                    reinit=True,
+                    config=config)
+
+            config = wandb.config
+        print('+'*10)
+        print('config :',config)
+        print('+'*10)
+        arg.base_lr = config["base-lr"]
+        arg.batch_size = config["batch-size"]
+        arg.weight_decay = config["weight-decay"]
+        arg.num_epoch = config["num-epoch"]
+        arg.kp_model = config["kp-model"]
+        arg.database = config["database"]
+
+        arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"
+        arg.work_dir              = "work_dir/"+arg.experiment_name +"/"
+
+        print('*'*20)
+        print('*'*20)
+
+        print('model_saved_directory',arg.model_saved_directory)
+        print('work_dir',arg.work_dir)
+
+
+        create_folder(arg.model_saved_directory)
+        create_folder(arg.work_dir)
+        create_folder('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name+ '/')
+
+        # {arg.model_saved_directory}-{arg.kp_model}-{arg.database}-Lr{str(arg.base_lr)}-NClasses{str(arg.num_class)}-{str(config['num_points'])}
+        #os.makedirs(arg.file_name,exist_ok=True)
+
+
+        runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-Lr" + str(arg.base_lr)+ "-NClas" + str(arg.num_class) + "-Batch" + str(arg.batch_size)+"-Seed"+str(arg.seed)+"-id"+str(id_iteration)
+
+        model_name = runAndModelName
+        print('model_name : ',model_name)
+        if wandbFlag:
+            wandb.run.name = runAndModelName
+            wandb.run.save()
+
+
+
+        print("*"*30)
+        print("*"*30)
+        print(arg)
+        print("*"*30)
+        print("*"*30)
+        print(arg.train_feeder_args)
+        print('train_feeder_args',arg.train_feeder_args)
+        processor = Processor(arg)
+        processor.start()
+        if wandbFlag:
+            wandb.finish()
+            print("wandb finish")

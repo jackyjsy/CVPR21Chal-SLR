@@ -945,8 +945,8 @@ if __name__ == '__main__':
         # load arg form config file
         arg = parser.parse_args()
 
-        arg.training_set_path = '../../../'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
-        arg.testing_set_path  = '../../../'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
+        arg.training_set_path = '../../DATASETS/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
+        arg.testing_set_path  = '../../DATASETS/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
 
         if arg.database == 'AEC':
             arg.num_class  = 28 
@@ -957,8 +957,8 @@ if __name__ == '__main__':
                 
         if arg.database == 'PUCP':
             arg.num_class  = 29 
-            arg.training_set_path = '../../../PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
-            arg.testing_set_path  = '../../../PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
+            arg.training_set_path = '../../DATASETS/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
+            arg.testing_set_path  = '../../DATASETS/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
 
         arg.model_args['num_class'] =arg.num_class
         arg.model_args['num_point'] =arg.keypoints_number

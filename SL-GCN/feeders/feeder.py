@@ -9,6 +9,7 @@ from feeders import tools
 
 # flip_index for 71 and 29
 flip_index = {71:np.concatenate(([0,2,1,4,3,6,5,8,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50],[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70]), axis=0),
+              51:np.concatenate(([0,2,1,4,3,6,5,8,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[31,32,33,34,35,36,37,38,39,40],[41,42,43,44,45,46,47,48,49,50]), axis=0),              
               29:np.concatenate(([0,2,1,4,3,6,5,8,7],[9,10,11,12,13,14,15,16,17,18],[19,20,21,22,23,24,25,26,27,28]), axis=0)}
 
 class Feeder(Dataset):
@@ -98,7 +99,7 @@ class Feeder(Dataset):
         if self.random_mirror:
             if random.random() > self.random_mirror_p:
                 #print("dabe before random mirror", data_numpy)
-                assert data_numpy.shape[2] == 71 or data_numpy.shape[2] == 29
+                assert data_numpy.shape[2] == 71 or data_numpy.shape[2] == 29 or data_numpy.shape[2] == 51
                 data_numpy = data_numpy[:,:,flip_index[data_numpy.shape[2]],:]
                 if self.is_vector:
                     data_numpy[0,:,:,:] = - data_numpy[0,:,:,:]

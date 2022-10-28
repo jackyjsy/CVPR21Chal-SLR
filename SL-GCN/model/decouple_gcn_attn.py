@@ -237,17 +237,15 @@ class Model(nn.Module):
 
         self.l1 = TCN_GCN_unit(in_channels, 64, A, groups, num_point,
                                block_size, residual=False)
-        self.l2 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        self.l3 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        self.l4 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        self.l5 = TCN_GCN_unit(
-            64, 128, A, groups, num_point, block_size, stride=2)
-        self.l6 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
-        self.l7 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
-        self.l8 = TCN_GCN_unit(128, 256, A, groups,
-                               num_point, block_size, stride=2)
-        self.l9 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
-        self.l10 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
+        #self.l2 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
+        #self.l3 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
+        #self.l4 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
+        self.l5 = TCN_GCN_unit(64, 128, A, groups, num_point, block_size, stride=2)
+        #self.l6 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
+        #self.l7 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
+        self.l8 = TCN_GCN_unit(128, 256, A, groups,num_point, block_size, stride=2)
+        #self.l9 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
+        #self.l10 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
 
         self.fc = nn.Linear(256, num_class)
         nn.init.normal(self.fc.weight, 0, math.sqrt(2. / num_class))
@@ -261,15 +259,15 @@ class Model(nn.Module):
             0, 1, 3, 4, 2).contiguous().view(N * M, C, T, V)
 
         x = self.l1(x, 1.0)
-        x = self.l2(x, 1.0)
-        x = self.l3(x, 1.0)
-        x = self.l4(x, 1.0)
+        #x = self.l2(x, 1.0)
+        #x = self.l3(x, 1.0)
+        #x = self.l4(x, 1.0)
         x = self.l5(x, 1.0)
-        x = self.l6(x, 1.0)
-        x = self.l7(x, keep_prob)
+        #x = self.l6(x, 1.0)
+        #x = self.l7(x, keep_prob)
         x = self.l8(x, keep_prob)
-        x = self.l9(x, keep_prob)
-        x = self.l10(x, keep_prob)
+        #x = self.l9(x, keep_prob)
+        #x = self.l10(x, keep_prob)
 
         # N*M,C,T,V
         c_new = x.size(1)

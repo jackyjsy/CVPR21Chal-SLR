@@ -233,15 +233,15 @@ class Model(nn.Module):
         A = self.graph.A
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)
 
-        self.l1 = TCN_GCN_unit(in_channels, 64, A, groups, num_point,
+        self.l1 = TCN_GCN_unit(in_channels, 32, A, groups, num_point,
                                block_size, residual=False)
         #self.l2 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
         #self.l3 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
         #self.l4 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        self.l5 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size, stride=2)
+        #self.l5 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size, stride=2)
         #self.l6 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
         #self.l7 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
-        self.l8 = TCN_GCN_unit(64, 64, A, groups,num_point, block_size, stride=2)
+        self.l8 = TCN_GCN_unit(32, 64, A, groups,num_point, block_size, stride=2)
         #self.l9 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
         #self.l10 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
 
@@ -260,7 +260,7 @@ class Model(nn.Module):
         #x = self.l2(x, 1.0)
         #x = self.l3(x, 1.0)
         #x = self.l4(x, 1.0)
-        x = self.l5(x, 1.0)
+        #x = self.l5(x, 1.0)
         #x = self.l6(x, 1.0)
         #x = self.l7(x, keep_prob)
         x = self.l8(x, keep_prob)

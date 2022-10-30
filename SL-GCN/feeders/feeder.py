@@ -102,7 +102,7 @@ class Feeder(Dataset):
                 assert data_numpy.shape[2] == 71 or data_numpy.shape[2] == 29 or data_numpy.shape[2] == 51
                 data_numpy = data_numpy[:,:,flip_index[data_numpy.shape[2]],:]
                 if self.is_vector:
-                    data_numpy[0,:,:,:] = - data_numpy[0,:,:,:]
+                    data_numpy[0,:,:,:] = 1 - data_numpy[0,:,:,:]
                 else: 
                     data_numpy[0,:,:,:] = 1 - data_numpy[0,:,:,:]
             #print("dabe after random mirror", data_numpy)
@@ -110,7 +110,7 @@ class Feeder(Dataset):
         if self.normalization:
             # data_numpy = (data_numpy - self.mean_map) / self.std_map
             assert data_numpy.shape[0] == 2
-            #print("dabe before norm", data_numpy)
+            #print("dabe before norm", data_numpy.shape)
             if self.is_vector:
                 data_numpy[0,:,0,:] = data_numpy[0,:,0,:] - data_numpy[0,:,0,0].mean(axis=0)
                 data_numpy[1,:,0,:] = data_numpy[1,:,0,:] - data_numpy[1,:,0,0].mean(axis=0)
@@ -122,8 +122,8 @@ class Feeder(Dataset):
             
             #print("dabe before shift", data_numpy)
             if self.is_vector:
-                data_numpy[0,:,0,:] += random.random() * 20 - 10.0
-                data_numpy[1,:,0,:] += random.random() * 20 - 10.0
+                data_numpy[0,:,0,:] += random.random()/25 # * 20 - 10.0
+                data_numpy[1,:,0,:] += random.random()/25 # * 20 - 10.0
             else:
                 data_numpy[0,:,:,:] += random.random()/25 #random.random() * 20 - 10.0
                 data_numpy[1,:,:,:] += random.random()/25 #random.random() * 20 - 10.0

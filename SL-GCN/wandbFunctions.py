@@ -33,7 +33,7 @@ def wandbTrainLog(trainLoss, TrainAcc,p1,p2):
                "Train accuracy": TrainAcc,
                "m_params":p1,
                "trainable_m_params":p2
-               })
+               }, commit=False)
 
 def wandbValLog(testLoss, TestAcc, top5,maxTestAcc,relative_maxtop5):
     wandb.log({"Val Loss": testLoss,

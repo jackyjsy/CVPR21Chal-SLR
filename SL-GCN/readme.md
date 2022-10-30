@@ -16,6 +16,12 @@ Note: If you do not use WandB please change to False "wandbFlag" variable value 
 * --mode_train => to show in wandb the number of parameters (always write: numero_parametros"
 * --cleaned => add this to use the cleaned data from Connecting points repository
 
+
+---------------
+
+To automatize our work we create this .sh file
+modify it as you need
+
 # in windows
 ```
 bash runModel.sh

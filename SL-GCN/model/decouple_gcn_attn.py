@@ -1,7 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
 import numpy as np
 import math
 from model.dropSke import DropBlock_Ske
@@ -240,14 +238,14 @@ class Model(nn.Module):
         #self.l2 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
         #self.l3 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
         #self.l4 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        self.l5 = TCN_GCN_unit(64, 128, A, groups, num_point, block_size, stride=2)
+        self.l5 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size, stride=2)
         #self.l6 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
         #self.l7 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
-        self.l8 = TCN_GCN_unit(128, 256, A, groups,num_point, block_size, stride=2)
+        self.l8 = TCN_GCN_unit(64, 64, A, groups,num_point, block_size, stride=2)
         #self.l9 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
         #self.l10 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
 
-        self.fc = nn.Linear(256, num_class)
+        self.fc = nn.Linear(64, num_class)
         nn.init.normal(self.fc.weight, 0, math.sqrt(2. / num_class))
         bn_init(self.data_bn, 1)
 

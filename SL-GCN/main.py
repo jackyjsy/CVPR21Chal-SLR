@@ -138,6 +138,7 @@ def get_parser():
     parser.add_argument("--database", type=str, default="", help="Path to the testing dataset CSV file")
     parser.add_argument("--mode_train", type=str, default="train", help="Path to the testing dataset CSV file")
     parser.add_argument('--cleaned', type=bool, default=False, help='use nesterov or not')
+    parser.add_argument('--user', type=str, default="cristian", help='user of the experiment')
 
     return parser
 def count_parameters(model):
@@ -1052,22 +1053,30 @@ if __name__ == '__main__':
         }
         import wandb
         import os
+        from dotenv import load_dotenv
+        load_dotenv()
 
-        os.environ["WANDB_API_KEY"] = "9c7a2412b1f242359f1a4915b620f578b32e96ac"
 
+        os.environ["WANDB_API_KEY"] = os.getenv('API_KEY_WAND')
+        print("WANDB API KEY :",os.environ["WANDB_API_KEY"][:5])
         if wandbFlag:
-            if arg.cleaned:
-                wandb.init(project="three-datasets-psl", 
+            if arg.user =='cristian':
+                wandb.init(project="sign_language_project", 
+                entity="ml_projects",
+                config=config)
+            else:
+                if arg.cleaned:
+                    wandb.init(project="three-datasets-psl", 
+                            entity="JoeNatan30",
+                            tags=["cleaned_data","dist_dur_ban","model_mod"],
+                            reinit=True,
+                            config=config)
+                else:
+                    wandb.init(project="three-datasets-psl", 
                         entity="JoeNatan30",
-                        tags=["cleaned_data","dist_dur_ban","model_mod"],
+                        tags=["complete_data","dist_dur_ban","model_mod"],
                         reinit=True,
                         config=config)
-            else:
-                wandb.init(project="three-datasets-psl", 
-                    entity="JoeNatan30",
-                    tags=["complete_data","dist_dur_ban","model_mod"],
-                    reinit=True,
-                    config=config)
 
             config = wandb.config
         print('+'*10)
@@ -1082,7 +1091,10 @@ if __name__ == '__main__':
         arg.kp_model = config["kp-model"]
         arg.database = config["database"]
 
-        arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"+now+"/"
+        if arg.user =='cristian':
+            arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"
+        else:
+            arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"+now+"/"
         arg.work_dir              = "work_dir/"+arg.experiment_name +"/"
 
         print('*'*20)

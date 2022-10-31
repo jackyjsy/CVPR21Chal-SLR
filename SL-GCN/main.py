@@ -279,6 +279,30 @@ class Processor():
         self.m_params = sum(p.numel() for p in self.model.parameters())
         self.trainable_m_params= sum(p.numel() for p in self.model.parameters() if p.requires_grad)
 
+        #frames*kp-model*numero_de_videos
+        total_informacion_analizada={
+            "29":{
+                    "AEC":1812500,
+                    "PUCP":2456300,
+                    "WLASL":3932400
+                    },
+            "51":{
+                    "AEC":3187500,
+                    "PUCP":4319700,
+                    "WLASL":6915600
+                    }
+                 ,
+            "71":{
+                    "AEC":4437500,
+                    "PUCP":6013700,
+                    "WLASL":9627600                     
+                 }
+            }        
+
+        
+        self.factor_trainable_m_params =  self.trainable_m_params/total_informacion_analizada[str(self.arg.keypoints_number)][str(self.arg.database)]
+
+        
         # self.loss = LabelSmoothingCrossEntropy().cuda(output_device)
 
 
@@ -515,7 +539,7 @@ class Processor():
             mean_loss = np.mean(loss_value)
             if mean_loss>10:
                 mean_loss = 10
-            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params)
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params,self.factor_trainable_m_params)
         # statistics of time consumption and loss
         proportion = {
             k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))
@@ -627,7 +651,7 @@ class Processor():
             if mean_loss>10:
                 mean_loss = 10
 
-            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params)
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params,self.factor_trainable_m_params)
         # statistics of time consumption and loss
         proportion = {
             k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))

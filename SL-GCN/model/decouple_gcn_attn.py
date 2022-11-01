@@ -4,7 +4,7 @@ import numpy as np
 import math
 from model.dropSke import DropBlock_Ske
 from model.dropT import DropBlockT_1d
-
+import time
 
 def import_class(name):
     components = name.split('.')
@@ -231,10 +231,15 @@ class Model(nn.Module):
             self.graph.num_node = num_point
 
         A = self.graph.A
+        
+        print("@"*30)
+        print("num_class : ",num_class)
+        print("num_point : ",num_point)
+        print("@"*30)
+        time.sleep(2)
+        
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)
-
-        self.l1 = TCN_GCN_unit(in_channels, 16, A, groups, num_point,
-                               block_size, residual=False)
+        self.l1 = TCN_GCN_unit(in_channels, 16, A, groups, num_point,block_size, residual=False)
         #self.l2 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
         #self.l3 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
         #self.l4 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)

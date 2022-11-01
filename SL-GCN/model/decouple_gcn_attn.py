@@ -231,26 +231,11 @@ class Model(nn.Module):
             self.graph.num_node = num_point
 
         A = self.graph.A
-        
-        print("@"*30)
-        print("num_class : ",num_class)
-        print("num_point : ",num_point)
-        print("@"*30)
-        time.sleep(2)
-        
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)
-        self.l1 = TCN_GCN_unit(in_channels, 16, A, groups, num_point,block_size, residual=False)
-        #self.l2 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        #self.l3 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        #self.l4 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
-        #self.l5 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size, stride=2)
-        #self.l6 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
-        #self.l7 = TCN_GCN_unit(128, 128, A, groups, num_point, block_size)
-        #self.l8 = TCN_GCN_unit(16, 32, A, groups,num_point, block_size, stride=2)
-        #self.l9 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
-        #self.l10 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
 
-        self.fc = nn.Linear(16, num_class)
+        self.l1 = TCN_GCN_unit(in_channels, 32, A, groups, num_point,
+                               block_size, residual=False)
+        self.fc = nn.Linear(32, num_class)
         nn.init.normal(self.fc.weight, 0, math.sqrt(2. / num_class))
         bn_init(self.data_bn, 1)
 
@@ -262,23 +247,7 @@ class Model(nn.Module):
             0, 1, 3, 4, 2).contiguous().view(N * M, C, T, V)
 
         x = self.l1(x, 1.0)
-        #x = self.l2(x, 1.0)
-        #x = self.l3(x, 1.0)
-        #x = self.l4(x, 1.0)
-        #x = self.l5(x, 1.0)
-        #x = self.l6(x, 1.0)
-        #x = self.l7(x, keep_prob)
-        #x = self.l8(x, keep_prob)
-        #x = self.l9(x, keep_prob)
-        #x = self.l10(x, keep_prob)
-
-        # N*M,C,T,V
         c_new = x.size(1)
-
-        # print(x.size())
-        # print(N, M, c_new)
-
-        # x = x.view(N, M, c_new, -1)
         x = x.reshape(N, M, c_new, -1)
         x = x.mean(3).mean(1)
 

@@ -233,7 +233,7 @@ class Model(nn.Module):
         A = self.graph.A
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)
 
-        self.l1 = TCN_GCN_unit(in_channels, 32, A, groups, num_point,
+        self.l1 = TCN_GCN_unit(in_channels, 16, A, groups, num_point,
                                block_size, residual=False)
         #self.l2 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
         #self.l3 = TCN_GCN_unit(64, 64, A, groups, num_point, block_size)
@@ -245,7 +245,7 @@ class Model(nn.Module):
         #self.l9 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
         #self.l10 = TCN_GCN_unit(256, 256, A, groups, num_point, block_size)
 
-        self.fc = nn.Linear(32, num_class)
+        self.fc = nn.Linear(16, num_class)
         nn.init.normal(self.fc.weight, 0, math.sqrt(2. / num_class))
         bn_init(self.data_bn, 1)
 

@@ -233,9 +233,8 @@ class Model(nn.Module):
         A = self.graph.A
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)
 
-        self.l1 = TCN_GCN_unit(in_channels, 32, A, groups, num_point,
-                               block_size, residual=False)
-        self.fc = nn.Linear(32, num_class)
+        self.l1 = TCN_GCN_unit(in_channels, 16, A, groups, num_point,block_size, residual=False)
+        self.fc = nn.Linear(16, num_class)
         nn.init.normal(self.fc.weight, 0, math.sqrt(2. / num_class))
         bn_init(self.data_bn, 1)
 
@@ -247,6 +246,8 @@ class Model(nn.Module):
             0, 1, 3, 4, 2).contiguous().view(N * M, C, T, V)
 
         x = self.l1(x, 1.0)
+
+        # N*M,C,T,V
         c_new = x.size(1)
         x = x.reshape(N, M, c_new, -1)
         x = x.mean(3).mean(1)

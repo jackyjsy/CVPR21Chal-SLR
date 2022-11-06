@@ -1141,7 +1141,11 @@ if __name__ == '__main__':
         model_name = runAndModelName
         print('model_name : ',model_name)
         if wandbFlag:
-            wandb.run.name = runAndModelName + "-" + now
+            
+            if arg.user =='cristian':
+                wandb.run.name = runAndModelName                
+            else:
+                wandb.run.name = runAndModelName + "-" + now
             wandb.run.save()
 
 

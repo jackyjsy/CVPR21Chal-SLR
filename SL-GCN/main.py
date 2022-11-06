@@ -134,11 +134,14 @@ def get_parser():
     parser.add_argument("--keypoints_model", type=str, default="openpose", help="Path to the training dataset CSV file")
     parser.add_argument("--keypoints_number", type=int, default=29, help="Path to the training dataset CSV file")
     parser.add_argument("--testing_set_path", type=str, default="", help="Path to the testing dataset CSV file")
-    parser.add_argument("--num_class", type=int, default=0, help="Path to the testing dataset CSV file")
-    parser.add_argument("--database", type=str, default="", help="Path to the testing dataset CSV file")
-    parser.add_argument("--mode_train", type=str, default="train", help="Path to the testing dataset CSV file")
+    parser.add_argument("--num_class", type=int, default=0, help="number of points")
+    parser.add_argument("--database", type=str, default="", help="name of database")
+    parser.add_argument("--mode_train", type=str, default="train", help="training special characteristic to name")
     parser.add_argument('--cleaned', type=bool, default=False, help='use nesterov or not')
     parser.add_argument('--user', type=str, default="cristian", help='user of the experiment')
+    parser.add_argument('--model_version', type=int, default=1, help='model version of architecture')
+    
+    
 
     return parser
 def count_parameters(model):
@@ -1045,7 +1048,8 @@ if __name__ == '__main__':
 
         arg.model_args['num_class'] =arg.num_class
         arg.model_args['num_point'] =arg.keypoints_number
-
+        arg.model_args['model_version'] = arg.model_version
+        
         arg.model_args['graph_args']['num_node'] =arg.keypoints_number
 
         #num_class: 28 # AEC=28, PUCP=36 , WLASL=101

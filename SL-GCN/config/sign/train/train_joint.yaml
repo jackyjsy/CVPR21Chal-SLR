@@ -39,7 +39,7 @@ base_lr: 0.005
 step: [] #[50, 100, 150, 200] # To modify the learning rate => lr * 0.1**Sum(x :->  epoch > step)
 
 # training
-device: [0, 1]
+device: [0]
 #device: [0]
 keep_rate: 0.9
 only_train_epoch: 1

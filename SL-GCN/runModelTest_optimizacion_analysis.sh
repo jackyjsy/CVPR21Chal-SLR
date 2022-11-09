@@ -8,7 +8,8 @@
 declare -a points=(29 51 71 29 51 71 29 51 71)
 declare -a lrs=(0.0005 0.0005 0.0005 0.0005 0.0005 0.0005 0.0005 0.0005 0.0005)
 declare -a datasets=("AEC" "AEC" "AEC" "PUCP" "PUCP" "PUCP" "WLASL" "WLASL" "WLASL")
-declare -a model_version=(3 3 4 2 2 3 0 0 1)
+declare -a model_version=(3 4 5 3 3 4 1 1 2)
+#declare -a model_version=(3 3 4 2 2 3 0 0 1)
 
 # wlasl 0.0005
 
@@ -16,10 +17,10 @@ declare -a model_version=(3 3 4 2 2 3 0 0 1)
 
 for i in 0 # seed
 do
-  for j in 0 # dataset-keypoint
+  for j in 4 5 6 7 8 0 1 2 3# dataset-keypoint
   do 
-      python main.py --seed $i --model_version ${model_version[j]} --experiment_name "results/${points[j]}/${datasets[j]}/wholepose-${datasets[j]}-s-$i" --database ${datasets[j]} --keypoints_model wholepose --base_lr ${lrs[j]} --keypoints_number ${points[j]} --num_epoch 1  --mode_train "modelos_optimizados_test_run2"
-      python main.py --seed $i --model_version ${model_version[j]} --experiment_name "results/${points[j]}/${datasets[j]}/mediapipe-${datasets[j]}-s-$i" --database ${datasets[j]} --keypoints_model mediapipe --base_lr ${lrs[j]} --keypoints_number ${points[j]} --num_epoch 1  --mode_train "modelos_optimizados_test_run2" --weights "save_models/results/${points[j]}/${datasets[j]}/wholepose-${datasets[j]}-s-$i/wholepose-${datasets[j]}-${points[j]}-$i-init.pt"
-      python main.py --seed $i --model_version ${model_version[j]} --experiment_name "results/${points[j]}/${datasets[j]}/openpose-${datasets[j]}-s-$i" --database ${datasets[j]} --keypoints_model openpose --base_lr ${lrs[j]} --keypoints_number ${points[j]} --num_epoch 1  --mode_train "modelos_optimizados_test_run2" --weights "save_models/results/${points[j]}/${datasets[j]}/wholepose-${datasets[j]}-s-$i/wholepose-${datasets[j]}-${points[j]}-$i-init.pt"
+      python main.py --seed $i --model_version ${model_version[j]} --experiment_name "results/${points[j]}/${datasets[j]}/wholepose-${datasets[j]}-s-$i" --database ${datasets[j]} --keypoints_model wholepose --base_lr ${lrs[j]} --keypoints_number ${points[j]} --num_epoch 2500  --mode_train "modelos_optimizados"
+      python main.py --seed $i --model_version ${model_version[j]} --experiment_name "results/${points[j]}/${datasets[j]}/mediapipe-${datasets[j]}-s-$i" --database ${datasets[j]} --keypoints_model mediapipe --base_lr ${lrs[j]} --keypoints_number ${points[j]} --num_epoch 2500  --mode_train "modelos_optimizados" --weights "save_models/results/${points[j]}/${datasets[j]}/wholepose-${datasets[j]}-s-$i/wholepose-${datasets[j]}-${points[j]}-$i-init.pt"
+      python main.py --seed $i --model_version ${model_version[j]} --experiment_name "results/${points[j]}/${datasets[j]}/openpose-${datasets[j]}-s-$i" --database ${datasets[j]} --keypoints_model openpose --base_lr ${lrs[j]} --keypoints_number ${points[j]} --num_epoch 2500  --mode_train "modelos_optimizados" --weights "save_models/results/${points[j]}/${datasets[j]}/wholepose-${datasets[j]}-s-$i/wholepose-${datasets[j]}-${points[j]}-$i-init.pt"
   done
 done

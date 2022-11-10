@@ -1119,8 +1119,11 @@ if __name__ == '__main__':
         arg.num_epoch = config["num-epoch"]
         arg.kp_model = config["kp-model"]
         arg.database = config["database"]
-    
-        arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"+now+"/"
+
+        if arg.user == "cristian":
+            arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"
+        else:
+            arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"+now+"/"
         arg.work_dir              = "work_dir/"+arg.experiment_name +"/"
 
         print('*'*20)

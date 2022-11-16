@@ -1,53 +1,32 @@
 # Skeleton Based Sign Language Recognition
-## Data preparation
-1. Extract whole-body keypoints data following the instruction in ../data_process/wholepose
-2. Run the following code to prepare the data for GCN.
 
-        cd data_gen/
-        python sign_gendata.py
-        python gen_bone_data.py
-        python gen_motion.py
-## Usage
-### Train:
+We prepare this runModel.sh file to run the model.
+
+Note: If you do not use WandB please change to False "wandbFlag" variable value in main.py (line 34)
+
+## main.py
+
+* --seed => set the seed to train [used 5, 15, 25, 35 and 45]
+* --experiment_name => The name where the model will be saved
+* --database => part of the name of the HDF5 file that will be used to retrieve the imput data (e.x: AEC, PUCP-DGI156, WLASL)
+* --keypoints_model => part of the name of the HDF5 file that will be used to retrieve the imput data (e.x: mediapipe, wholepose, openpose)
+* --base_lr => learning rate 
+* --keypoints_number => number of keypoints used (29 or 71)
+* --num_epoch => number of epochs 
+* --mode_train => to show in wandb the number of parameters (always write: numero_parametros"
+* --cleaned => add this to use the cleaned data from Connecting points repository
+
+
+---------------
+
+To automatize our work we create this .sh file
+modify it as you need
+
+# in windows
 ```
-python main.py --config config/sign/train/train_joint.yaml
-
-python main.py --config config/sign/train/train_bone.yaml
-
-python main.py --config config/sign/train/train_joint_motion.yaml
-
-python main.py --config config/sign/train/train_bone_motion.yaml
+bash runModel.sh
 ```
-### Finetune:
+# In Linux
 ```
-python main.py --config config/sign/finetune/train_joint.yaml
-
-python main.py --config config/sign/finetune/train_bone.yaml
-
-python main.py --config config/sign/finetune/train_joint_motion.yaml
-
-python main.py --config config/sign/finetune/train_bone_motion.yaml
+sh runModel.sh
 ```
-### Test:
-```
-python main.py --config config/sign/test/test_joint.yaml
-
-python main.py --config config/sign/test/test_bone.yaml
-
-python main.py --config config/sign/test/test_joint_motion.yaml
-
-python main.py --config config/sign/test/test_bone_motion.yaml
-```
-### Test Finetuned:
-```
-python main.py --config config/sign/test_finetuned/test_joint.yaml
-
-python main.py --config config/sign/test_finetuned/test_bone.yaml
-
-python main.py --config config/sign/test_finetuned/test_joint_motion.yaml
-
-python main.py --config config/sign/test_finetuned/test_bone_motion.yaml
-```
-### Multi-stream ensemble:
-1. Copy the results .pkl files from all streams (joint, bone, joint motion and bone motion) to ../ensemble/gcn and renamed them correctly.
-2. Follow the instruction in ../ensemble/gcn to obtained the results of multi-stream ensemble.

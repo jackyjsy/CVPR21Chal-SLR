@@ -1,0 +1,12 @@
+pandas==1.1.5
+tqdm==4.54.1
+matplotlib
+scikit-learn
+opencv-python==4.5.5.64
+torch --extra-index-url https://download.pytorch.org/whl/cu113
+torchvision --extra-index-url https://download.pytorch.org/whl/cu113
+h5py
+seaborn
+torchmetrics
+wandb==0.13.2
+python-dotenv

@@ -1,3 +1,16 @@
+*.log
+*.pt
+*.env
+data/
+save_models/
+work_dir/
+wandb/
+
+SL-GCN/data/
+SL-GCN/save_models/
+SL-GCN/work_dir/
+SL-GCN/wandb/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

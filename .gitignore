@@ -1,3 +1,6 @@
+*.log
+*.pt
+*.env
 data/
 save_models/
 work_dir/

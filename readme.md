@@ -1,3 +1,12 @@
+# About our paper "Impact of Pose Estimation Models for landmark-based Sign Language Recognition"
+We use SL-GCN adapted module to make it run with our dataset obtained from [ConnectingPoints Repository]()
+For our experiments we only train using Joints
+
+More detail about our process to run the model can be found in the READNE file in "SL-GCN" folder.
+
+The following sections of this readme are the explanation the author of this forked repository wrote.
+-----------------
+
 Skeleton Aware Multi-modal Sign Language Recognition
 =========
 By [Songyao Jiang](https://www.songyaojiang.com/), [Bin Sun](https://github.com/Sun1992/), [Lichen Wang](https://sites.google.com/site/lichenwang123/), [Yue Bai](https://yueb17.github.io/), [Kunpeng Li](https://kunpengli1994.github.io/) and [Yun Fu](http://www1.ece.neu.edu/~yunfu/).

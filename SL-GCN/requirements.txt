@@ -9,3 +9,4 @@ h5py
 seaborn
 torchmetrics
 wandb==0.13.2
+python-dotenv

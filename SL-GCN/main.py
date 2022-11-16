@@ -2,9 +2,7 @@
 from __future__ import print_function
 import argparse
 import os
-from termios import VMIN
 import time
-from xml.dom import minicompat
 import numpy as np
 import yaml
 import pickle
@@ -17,21 +15,25 @@ import torch.optim as optim
 from torch.autograd import Variable
 from tqdm import tqdm
 import shutil
-from torch.optim.lr_scheduler import ReduceLROnPlateau, MultiStepLR
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import random
 import inspect
 import torchmetrics
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-import torch.backends.cudnn as cudnn
-import torch.nn.functional as F
 import wandbFunctions as wandbF
 import wandb
 import time
+
+# Import datetime class from datetime module
+from datetime import datetime
+
 from data_gen.getConnectingPoint import *
 
 wandbFlag = True
+now = str(datetime.now())
+now = now.replace(':','-').replace(" ","_").split('.')[0]
 
 # class LabelSmoothingCrossEntropy(nn.Module):
 #     def __init__(self):
@@ -109,7 +111,7 @@ def get_parser():
 
     # optim
     parser.add_argument('--base_lr', type=float, default=0.05, help='initial learning rate')
-    parser.add_argument('--num_epoch',type=int,default=500,help='stop training in which epoch')
+    parser.add_argument('--num_epoch',type=int,default=5,help='stop training in which epoch')
     
     parser.add_argument('--step',type=int,default=[20, 40, 60],nargs='+',help='the epoch where optimizer reduce the learning rate')
     parser.add_argument('--device',type=int,default=0,nargs='+',help='the indexes of GPUs for training or testing')
@@ -132,12 +134,18 @@ def get_parser():
     parser.add_argument("--keypoints_model", type=str, default="openpose", help="Path to the training dataset CSV file")
     parser.add_argument("--keypoints_number", type=int, default=29, help="Path to the training dataset CSV file")
     parser.add_argument("--testing_set_path", type=str, default="", help="Path to the testing dataset CSV file")
-    parser.add_argument("--num_class", type=int, default=0, help="Path to the testing dataset CSV file")
-    parser.add_argument("--database", type=str, default="", help="Path to the testing dataset CSV file")
-    parser.add_argument("--mode_train", type=str, default="train", help="Path to the testing dataset CSV file")
+    parser.add_argument("--num_class", type=int, default=0, help="number of points")
+    parser.add_argument("--database", type=str, default="", help="name of database")
+    parser.add_argument("--mode_train", type=str, default="train", help="training special characteristic to name")
+    parser.add_argument('--cleaned', type=bool, default=False, help='use nesterov or not')
+    parser.add_argument('--user', type=str, default="cristian", help='user of the experiment')
+    parser.add_argument('--model_version', type=int, default=1, help='model version of architecture')
+    
+    
 
     return parser
-
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 class Processor():
     """ 
@@ -174,6 +182,7 @@ class Processor():
         self.lr = self.arg.base_lr
         self.best_acc = 0
         self.best_tmp_acc = 0
+        self.best_loss = 1000
 
         self.maxTestAcc = 0
         self.relative_maxtop5 = 0
@@ -213,6 +222,7 @@ class Processor():
         Feeder = import_class(self.arg.feeder)
         ln = Feeder(**self.arg.test_feeder_args)
         self.meaning = ln.meaning
+        pd.DataFrame(list(self.meaning.values())).to_csv('./work_dir/' + self.arg.experiment_name + '/eval_results/'+ model_name+ '/'+now+'/'+'labels_used.csv',header=None)
         #print(ln.meaning)
         self.data_loader = dict()
         if self.arg.phase == 'train':
@@ -246,8 +256,19 @@ class Processor():
         shutil.copy2(inspect.getfile(Model), self.arg.work_dir)
         self.model = Model(**self.arg.model_args).cuda(output_device)
         # print(self.model)
+
+        print('#'*60)
+        print('#'*40)
+        print('#'*20)
+        print("Trainable params:", count_parameters(self.model))
+        print('#'*20)
+        print('#'*40)
+        print('#'*60)
+
+
         if wandbFlag:
             wandbF.watch(self.model)
+
         self.loss = nn.CrossEntropyLoss().cuda(output_device)
 
         path_model_init =  os.path.join(arg.model_saved_directory,arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-"+str(arg.seed)+"-init.pt")
@@ -257,7 +278,34 @@ class Processor():
         self.print_log(path_model_init)
         torch.save(self.model.state_dict(), path_model_init)
         self.print_log('%'*20)
+        
+        self.m_params = sum(p.numel() for p in self.model.parameters())
+        self.trainable_m_params= sum(p.numel() for p in self.model.parameters() if p.requires_grad)
 
+        #frames*kp-model*numero_de_videos
+        total_informacion_analizada={
+            "29":{
+                    "AEC":1812500,
+                    "PUCP":2456300,
+                    "WLASL":3932400
+                    },
+            "51":{
+                    "AEC":3187500,
+                    "PUCP":4319700,
+                    "WLASL":6915600
+                    }
+                 ,
+            "71":{
+                    "AEC":4437500,
+                    "PUCP":6013700,
+                    "WLASL":9627600                     
+                 }
+            }        
+
+        
+        self.factor_trainable_m_params =  self.trainable_m_params/total_informacion_analizada[str(self.arg.keypoints_number)][str(self.arg.database)]
+
+        
         # self.loss = LabelSmoothingCrossEntropy().cuda(output_device)
 
 
@@ -361,7 +409,7 @@ class Processor():
         if not os.path.exists(self.arg.work_dir):
             os.makedirs(self.arg.work_dir)
             os.makedirs(self.arg.work_dir + '/eval_results')
-        os.makedirs(self.arg.work_dir + '/eval_results/'+ model_name, exist_ok = True)
+        os.makedirs(self.arg.work_dir + '/eval_results/'+ model_name + '/' + now, exist_ok = True)
 
         with open('{}/config.yaml'.format(self.arg.work_dir), 'w') as f:
             yaml.dump(arg_dict, f)
@@ -369,11 +417,14 @@ class Processor():
 
     def adjust_learning_rate(self, epoch):
         if self.arg.optimizer == 'SGD' or self.arg.optimizer == 'Adam':
+            # to modify base_lr before warm_up_epoch 
             if epoch < self.arg.warm_up_epoch:
                 lr = self.arg.base_lr * (epoch + 1) / self.arg.warm_up_epoch
             else:
+                # to modify base_lr depending of arg.step values (arg.step is list of values)
                 lr = self.arg.base_lr * (
                     0.1 ** np.sum(epoch >= np.array(self.arg.step)))
+
             for param_group in self.optimizer.param_groups:
                 param_group['lr'] = lr
             return lr
@@ -491,7 +542,7 @@ class Processor():
             mean_loss = np.mean(loss_value)
             if mean_loss>10:
                 mean_loss = 10
-            wandbF.wandbTrainLog(mean_loss, accuracy)
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params,self.factor_trainable_m_params)
         # statistics of time consumption and loss
         proportion = {
             k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))
@@ -603,7 +654,7 @@ class Processor():
             if mean_loss>10:
                 mean_loss = 10
 
-            wandbF.wandbTrainLog(mean_loss, accuracy)
+            wandbF.wandbTrainLog(mean_loss, accuracy,self.m_params,self.trainable_m_params,self.factor_trainable_m_params)
         # statistics of time consumption and loss
         proportion = {
             k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))
@@ -616,9 +667,11 @@ class Processor():
             f_w = open(wrong_file, 'w')
         if result_file is not None:
             f_r = open(result_file, 'w')
-        #if isTest:
+        
+        # variables to use to save the results in csv
         submission = dict()
         trueLabels = dict()
+        saveLabels = dict()
         
         meaning = list(self.meaning.values())
         self.model.eval()
@@ -663,8 +716,10 @@ class Processor():
 
                     #if isTest:
                     for j in range(output.size(0)):
+
                         submission[name[j]] = predict_label[j].item()
                         trueLabels[name[j]] = label_tmp[j].item()
+                        saveLabels[name[j]] = self.meaning[label_tmp[j].item()]
 
                     step += 1
 
@@ -677,7 +732,9 @@ class Processor():
                             if x != true[i] and wrong_file is not None:
                                 f_w.write(str(index[i]) + ',' +
                                         str(x) + ',' + str(true[i]) + '\n')
+
                 score = np.concatenate(score_frag)
+                epoch_loss = np.mean(loss_value)
 
                 if 'UCLA' in arg.experiment_name:
                     self.data_loader[ln].dataset.sample_name = np.arange(
@@ -686,6 +743,34 @@ class Processor():
                 accuracy = self.data_loader[ln].dataset.top_k(score, 1)
                 top5 = self.data_loader[ln].dataset.top_k(score, 5)
                 
+                if epoch_loss < self.best_loss:
+                    self.best_loss = epoch_loss
+
+                    class_acc = {element:[] for element in meaning}
+                    totalRows = 0
+                    with open('./work_dir/' + self.arg.experiment_name + '/eval_results/'+ model_name+ '/'+ now + '/loss-submission.csv', 'w',) as of:
+                        writer = csv.writer(of)
+                        accum = 0
+                        for trueName, truePred in trueLabels.items():
+
+                            sample = trueName
+                            #print(f'Predicting {sample}', end=' ')
+                            #print(f'as {submission[sample]} - pred {submission[sample]} and real {row[1]}')
+                            match=0
+                            if int(truePred) == int(submission[sample]):
+                                match=1
+                                accum+=1
+                            totalRows+=1
+                            class_acc[saveLabels[sample]].append(match)
+
+                            writer.writerow([sample, saveLabels[sample], submission[sample], str(truePred), str(match)])
+
+                    class_acc = [(k,sum(v),len(v),sum(v)/len(v)) for k,v in class_acc.items()]
+
+                    pd.DataFrame(class_acc, columns=["gloss","prediction","true label","acc"]).to_csv('./work_dir/' + self.arg.experiment_name + '/eval_results/'+ model_name + '/'+ now + '/loss-submission.csv',index=None)
+
+
+
                 if accuracy > self.best_acc:
                     self.best_acc = accuracy
 
@@ -727,7 +812,7 @@ class Processor():
                     #size_arr = df_cm.sum(axis = 1)
                     #maxi = max(size_arr)
 
-                    group_percentages = ["{0:.1%}".format(value) for value in confusion_matrix.flatten()]
+                    group_percentages = ["{0:.1%}".format(_value) for _value in confusion_matrix.flatten()]
                     
                     annot = ["{1}".format(v2, v1) for v1, v2 in zip(group_counts, group_percentages)]
                     annot = np.asarray(annot).reshape(self.arg.model_args["num_class"], self.arg.model_args["num_class"])
@@ -745,10 +830,10 @@ class Processor():
                     print('*'*20)
                     print('*'*20)
 
-                    print('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name+ '/best_acc' + '.pkl')
+                    print('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name + '/'+ now + '/best_acc' + '.pkl')
 
 
-                    with open('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name+ '/best_acc' + '.pkl'.format(
+                    with open('./work_dir/' + arg.experiment_name + '/eval_results/'+ model_name + '/'+ now + '/best_acc' + '.pkl'.format(
                             epoch, accuracy), 'wb') as f:
                         pickle.dump(score_dict, f)
 
@@ -761,10 +846,33 @@ class Processor():
                     print('*'*20)
                     print('*'*20)
                     print(self.arg.model_saved_directory)
-                    print(self.arg.model_saved_directory + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
-                    torch.save(weights, self.arg.model_saved_directory + '-' + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
+                    print(self.arg.model_saved_directory + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
+                    torch.save(weights, self.arg.model_saved_directory + arg.kp_model + '-' + arg.database + "-Lr" + str(arg.base_lr) + "-NClasses" + str(arg.model_args["num_class"]) + '-' + str(accuracy) + '.pt')
 
-                
+                    class_acc = {element:[] for element in meaning}
+                    totalRows = 0
+                    with open('./work_dir/' + self.arg.experiment_name + '/eval_results/'+ model_name+ '/'+ now + '/acc-submission.csv', 'w',) as of:
+                        writer = csv.writer(of)
+                        accum = 0
+                        for trueName, truePred in trueLabels.items():
+
+                            sample = trueName
+                            #print(f'Predicting {sample}', end=' ')
+                            #print(f'as {submission[sample]} - pred {submission[sample]} and real {row[1]}')
+                            match=0
+                            if int(truePred) == int(submission[sample]):
+                                match=1
+                                accum+=1
+                            totalRows+=1
+                            class_acc[saveLabels[sample]].append(match)
+
+                            writer.writerow([sample, saveLabels[sample], submission[sample], str(truePred), str(match)])
+
+                    class_acc = [(k,sum(v),len(v),sum(v)/len(v)) for k,v in class_acc.items()]
+
+                    pd.DataFrame(class_acc, columns=["gloss","prediction","true label","acc"]).to_csv('./work_dir/' + self.arg.experiment_name + '/eval_results/'+ model_name + '/'+ now + '/acc-submission_acc.csv',index=None)
+
+
                 if epoch + 1 == arg.num_epoch:
 
                     if wandbFlag:
@@ -776,8 +884,10 @@ class Processor():
                                     labels=meaning, classes_to_plot=None)})
                         except:
                             pass
+
                     #wandb.log({"val_sklearn_conf_mat": wandb.sklearn.plot_confusion_matrix(, 
                     #        , meaning_3)})
+
                     '''
                     wandb.log({"VAL_conf_mat" : wandb.plot.confusion_matrix(
                         #probs=score,
@@ -790,12 +900,12 @@ class Processor():
                 print('Eval Accuracy: ', accuracy,
                     ' model: ', self.arg.model_saved_directory)
                 if wandbFlag:
-                    mean_loss = np.mean(loss_value)
-                    if mean_loss>10:
+                    mean_loss = epoch_loss
+                    if mean_loss > 10:
                         mean_loss = 10
 
                     self.maxTestAcc = max(accuracy,self.maxTestAcc)
-                    
+
                     if self.maxTestAcc == accuracy:
 
                         self.relative_maxtop5 = top5
@@ -804,8 +914,10 @@ class Processor():
 
                 score_dict = dict(
                     zip(self.data_loader[ln].dataset.sample_name, score))
+
                 self.print_log('\tMean {} loss of {} batches: {}.'.format(
-                    ln, len(self.data_loader[ln]), np.mean(loss_value)))
+                    ln, len(self.data_loader[ln]), epoch_loss))
+                    
                 for k in self.arg.show_topk:
                     self.print_log('\tTop{}: {:.2f}%'.format(
                         k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
@@ -814,43 +926,9 @@ class Processor():
                         epoch, accuracy), 'wb') as f:
                     pickle.dump(score_dict, f)
                 '''
-
-        
-        predLabels = []
-        groundLabels = []
         print("END")
-        if isTest:
-            #print(submission)
-            #print(trueLabels)
-            totalRows = 0
-            with open("submission.csv", 'w') as of:
-                writer = csv.writer(of)
-                accum = 0
-                for trueName, truePred in trueLabels.items():
 
-                    sample = trueName
-                    #print(f'Predicting {sample}', end=' ')
-                    #print(f'as {submission[sample]} - pred {submission[sample]} and real {row[1]}')
-                    match=0
-                    predLabels.append(submission[sample])
-                    groundLabels.append(int(truePred))
-                    if int(truePred) == int(submission[sample]):
-                        match=1
-                        accum+=1
-                    totalRows+=1
-                    
-                    # identifying subject
-                    with open("pucpSubject.csv") as subjectFile:
-                        readerSubject = csv.reader(subjectFile)
-                        idx = int(sample.split('_')[-1])
-                        subjectName = 'NA'
-                        for name, idxStart, idxEnd in readerSubject:
-                            if (int(idxStart) <= idx) and (idx<= int(idxEnd)):
-                                subjectName = name
-                                break
-                    writer.writerow([sample, submission[sample], str(truePred), str(match), subjectName])
-
-        return np.mean(loss_value)
+        return epoch_loss
 
 
     def start(self):
@@ -925,9 +1003,6 @@ if __name__ == '__main__':
     for id_iteration in range(1):
 
         # load arg form config file
-
-
-
         print('arg.config',arg.config)
         if arg.config is not None:
             with open(arg.config, 'r') as f:
@@ -943,25 +1018,38 @@ if __name__ == '__main__':
             
         # load arg form config file
         arg = parser.parse_args()
+        print(arg.cleaned)
+        if arg.cleaned:
+            print("cleaned", "="*10)
+            arg.training_set_path = '../../ConnectingPoints/split/cleaned/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
+            arg.testing_set_path  = '../../ConnectingPoints/split/cleaned/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
+        else:
+            print("complete", "$"*10)
+            arg.training_set_path = '../../ConnectingPoints/split/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
+            arg.testing_set_path  = '../../ConnectingPoints/split/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
 
-        arg.training_set_path = '../../../dataset_original/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
-        arg.testing_set_path  = '../../../dataset_original/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
+        arg.training_set_path = '../../DATASETS/'+arg.database+'--'+arg.keypoints_model+'-Train.hdf5'
+        arg.testing_set_path  = '../../DATASETS/'+arg.database+'--'+arg.keypoints_model+'-Val.hdf5'
 
+        # DATABASE ARG
         if arg.database == 'AEC':
             arg.num_class  = 28 
 
         if arg.database == 'WLASL':
-
             arg.num_class  = 86 
                 
         if arg.database == 'PUCP':
             arg.num_class  = 29 
-            arg.training_set_path = '../../../dataset_original/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
-            arg.testing_set_path  = '../../../dataset_original/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
+            arg.training_set_path = '../../DATASETS/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Train.hdf5'
+            arg.testing_set_path  = '../../DATASETS/PUCP_PSL_DGI156--'+arg.keypoints_model+'-Val.hdf5'
+
+        if arg.database == 'AEC-DGI156-DGI305':
+            arg.num_class  = 70
 
         arg.model_args['num_class'] =arg.num_class
         arg.model_args['num_point'] =arg.keypoints_number
-
+        arg.model_args['model_version'] = arg.model_version
+        
         arg.model_args['graph_args']['num_node'] =arg.keypoints_number
 
         #num_class: 28 # AEC=28, PUCP=36 , WLASL=101
@@ -982,22 +1070,48 @@ if __name__ == '__main__':
                 "weight-decay": arg.weight_decay,
                 "batch-size":arg.batch_size,
                 "base-lr":  arg.base_lr,
+                "step": arg.step,
+                "warm_up_epoch": arg.warm_up_epoch,
                 "kp-model": arg.keypoints_model,
                 "num_points": arg.keypoints_number,
                 "database": arg.database,
                 "mode_train":arg.mode_train,
                 "seed":arg.seed,
                 "id_iteration":id_iteration,
+                "model_version":arg.model_version,
         }
+        import wandb
+        import os
+        from dotenv import load_dotenv
+        load_dotenv()
 
+
+        os.environ["WANDB_API_KEY"] = os.getenv('API_KEY_WAND')
+        print("WANDB API KEY :",os.environ["WANDB_API_KEY"][:5])
         if wandbFlag:
-            wandb.init(project="sign_language_project", 
-                    entity="ml_projects",
-                    config=config)
+            if arg.user =='cristian':
+                wandb.init(project="sign_language_project",#"sign_language_project", 
+                entity="ml_projects",
+                config=config)
+            else:
+                if arg.cleaned:
+                    wandb.init(project="three-datasets-psl", 
+                            entity="JoeNatan30",
+                            tags=["cleaned_data","dist_dur_ban","model_mod"],
+                            reinit=True,
+                            config=config)
+                else:
+                    wandb.init(project="three-datasets-psl", 
+                        entity="JoeNatan30",
+                        tags=["complete_data","dist_dur_ban","model_mod"],
+                        reinit=True,
+                        config=config)
 
             config = wandb.config
         print('+'*10)
         print('config :',config)
+
+        print('change learning in step: ',arg.step, "and (warm_up_epoch)", arg.warm_up_epoch)
         print('+'*10)
         arg.base_lr = config["base-lr"]
         arg.batch_size = config["batch-size"]
@@ -1006,8 +1120,11 @@ if __name__ == '__main__':
         arg.kp_model = config["kp-model"]
         arg.database = config["database"]
 
-        arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"
-        arg.work_dir              = "work_dir/"+arg.experiment_name+"/"
+        if arg.user == "cristian":
+            arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"
+        else:
+            arg.model_saved_directory = "save_models/"+arg.experiment_name+"/"+now+"/"
+        arg.work_dir              = "work_dir/"+arg.experiment_name +"/"
 
         print('*'*20)
         print('*'*20)
@@ -1023,14 +1140,20 @@ if __name__ == '__main__':
         # {arg.model_saved_directory}-{arg.kp_model}-{arg.database}-Lr{str(arg.base_lr)}-NClasses{str(arg.num_class)}-{str(config['num_points'])}
         #os.makedirs(arg.file_name,exist_ok=True)
 
-        runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-Lr" + str(arg.base_lr)+ "-NClas" + str(arg.num_class) + "-Batch" + str(arg.batch_size)+"-Seed"+str(arg.seed)+"-id"+str(id_iteration)
-
+        if arg.user == 'cristian':
+            runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-Lr" + str(arg.base_lr)+ "-m"+str(arg.model_version)+"-NClas" + str(arg.num_class) + "-Batch" + str(arg.batch_size)+"-Seed"+str(arg.seed)+"-id"+str(id_iteration)
+        else:
+            
+            runAndModelName =  arg.kp_model + '-' + arg.database +'-'+str(arg.keypoints_number)+ "-Lr" + str(arg.base_lr)+ "-NClas" + str(arg.num_class) + "-Batch" + str(arg.batch_size)+"-Seed"+str(arg.seed)+"-id"+str(id_iteration)
         model_name = runAndModelName
         print('model_name : ',model_name)
         if wandbFlag:
-            wandb.run.name = runAndModelName
+            
+            if arg.user =='cristian':
+                wandb.run.name = runAndModelName                
+            else:
+                wandb.run.name = runAndModelName + "-" + now
             wandb.run.save()
-
 
 
         print("*"*30)
